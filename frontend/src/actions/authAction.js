@@ -16,9 +16,11 @@ export const registerUser = (userData, history) => dispatch => {
 };
 
 export const loginUser = userData => dispatch => {
+  console.log(userData)
   axios
     .post("/api/user/login", userData)
     .then(res => {
+      console.log(res)
       // Save to localStorage
       const { token } = res.data;
       // Set token to ls
@@ -30,12 +32,12 @@ export const loginUser = userData => dispatch => {
       // Set current User
       dispatch(setCurrentUser(decoded));
     })
-    .catch(err =>
+    .catch(err => {
       dispatch({
         type: GET_ERRORS,
         payload: err.response.data
       })
-    );
+    });
 };
 
 // Set logged in User
