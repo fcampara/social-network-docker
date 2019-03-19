@@ -4,9 +4,8 @@ import isEmpty from "../../../validation/is-empty";
 class About extends Component {
   render() {
     const { profile } = this.props;
-
     // Get first name
-    const firstName = profile.user.name.trim().split(" ")[0];
+    const firstName = profile.user ? profile.user.name : profile.githubusername.trim().split(" ")[0];
     // Skill list
     const skills = profile.skills.map((skill, index) => (
       <div key={index} className="p-3">
