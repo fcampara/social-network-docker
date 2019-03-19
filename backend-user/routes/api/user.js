@@ -76,20 +76,16 @@ router.post("/login", (req, res) => {
 
   // Find User by email
   User.findOne({ email }).then(user => {
-    console.log("User: ", user)
     if (!user) {
       errors.email = "User not found";
       return res.status(404).json(errors);
     }
     // Verify the password.
     bcrypt.compare(password, user.password).then(isMatch => {
-      console.log('isMatch: ', isMatch)
       if (isMatch) {
         // User Match, Sign Token
         const payload = { id: user.id, name: user.name, avatar: user.avatar };
-        console.log('Payload: ', payload)
         const token = jwt.sign( payload, secretOrKey, { expiresIn: 3600 } );
-        console.log('Token: ', token)
         res.status(200).json({
           success: true,
           token: "Bearer " + token

@@ -16,21 +16,22 @@ export const registerUser = (userData, history) => dispatch => {
 };
 
 export const loginUser = userData => dispatch => {
-  console.log(userData)
   axios
     .post("/api/user/login", userData)
     .then(res => {
       console.log(res)
       // Save to localStorage
       const { token } = res.data;
-      // Set token to ls
-      localStorage.setItem("jwtToken", token);
-      // Set token to auth header
-      setAuthToken(token);
-      // Decode token to get user data
-      const decoded = jwt_decode(token);
-      // Set current User
-      dispatch(setCurrentUser(decoded));
+      if (token) {
+        // Set token to ls
+        localStorage.setItem("jwtToken", token);
+        // Set token to auth header
+        setAuthToken(token);
+        // Decode token to get user data
+        const decoded = jwt_decode(token);
+        // Set current User
+        dispatch(setCurrentUser(decoded));
+      }
     })
     .catch(err => {
       dispatch({
