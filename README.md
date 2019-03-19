@@ -36,8 +36,13 @@ Com essa grande evolução começou ocorrer uma demanda maior dos servidores, lo
 # Microserviços
   Nessa tipo de arquitetura a aplicação fica dividida em partes (Frontend e Backend), um conceito básico do microserviço  que ele seja [statless](###-statless), assim podendo subir partes diferentes do serviço e usuário pode acessar qualquer um dos serviços sem problema nenhum e não tem réplicas de dados desnecessários, logo gerando agilidade para o desenvolvimento, e sendo capaz de corrigir partes de um módulo sem afetar nenhuma outra parte do serviço.
   
- ### Vantagens
- - Facilidade no auto-scale
-  
 ### Statless
   Não armazena nenhum tipo de configuração do usuário, facilitando na criação de replicas dos serviços.
+
+ ### Vantagens
+ - Facilidade no auto-scale
+ 
+ ### Desvantagens
+ - Custo de desenvolvimento grande
+ 
+# Docker
