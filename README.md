@@ -48,39 +48,24 @@ Com essa grande evolução começou ocorrer uma demanda maior dos servidores, lo
  - Custo de desenvolvimento grande
 
 # Container
-  Um container possui todas as configuração para o nosso serviço, tanto quanto frotnend e backend, basicamente é uma imagem com todas as configurações necessárias, mas subir essa imagem e utilizar em seu servidor. Um comparativo de container é as máquinas virtuais, podendo criar várias snapshots com as configurações do nosso serviço, mas o problema disso que acaba se tornando custoso pela questão que a cada snapshot devemos instalar um SO por completo e não iremos utilizar todos os recursos dele. Diferente do Container que ele é isolado mas compartilha o mesmo SO, logo poupando recurso computacional.
+  Um container possui todas as configuração para o nosso serviço, tanto quanto frotnend e backend, basicamente é uma imagem (é a base para gerar 1 ou N containers, é construida atráves de um arquivo chamado Dockerfile) com todas as configurações necessárias, mas subir essa imagem e utilizar em seu servidor. Um comparativo de container é as máquinas virtuais, podendo criar várias snapshots com as configurações do nosso serviço, mas o problema disso que acaba se tornando custoso pela questão que a cada snapshot devemos instalar um SO por completo e não iremos utilizar todos os recursos dele. Diferente do Container que ele é isolado mas compartilha o mesmo SO, logo poupando recurso computacional.
 
   ![alt Comparação entre Hypervirsos e Container](http://imesh.github.io/images/contvsvm.png)
   > Hypervisor X Container
 
 # Docker
 
-  Para entender o ecossistema do Docker, é interessante saber como funciona, ele é dividio em várias camadas, sendo a primeira o Client aonde será executado os comando, Host aonde fica armazenada as imagens e o containers e o Registry sendo aonde busca as imagens do Docker. Utilizaremos o Docker Registry pois é o repositório oficial do Docker.
+  Para entender o ecossistema do Docker, é interessante saber como funciona, ele é dividio em várias camadas, sendo a primeira o Client aonde será executado os comando, Host aonde fica armazenada as imagens e o containers e o Registry sendo aonde busca as imagens do Docker. Utilizaremos o [Docker Registry](https://hub.docker.com/) pois é o repositório oficial do Docker.
 
 ### Comands Docker
 
-Constrói uma imagem
-```
-  $ docker build
-```
-
-Baixa uma imagem, esse é imagem baixada do Docker Host caso não exista ele procura no Registry e depois armazena no Host
-```
-  $ docker pull
-```
-
-Basta passa o nome da imagem ele é procurando no Docker Host caso não exista ele procura no Registry e depois joga a imagem no repositório de imagens local e depois instância ela em um container
-```
-  $ docker run
-```
-
-Lista as imagens
-```
-  $ docker images
-```
-
-Lista os containers em execução, com a flag -a ele exibi todos os containers até os que estão inativos
-```
-  $ docker ps
-  $ docker ps -a
-```
+| COMANDOS        | DESCRIÇÃO           |
+| --------------- | ------------------- |
+| $ docker build  | Constrói uma imagem |
+| $ docker pull   | Baixa uma imagem, esse é imagem baixada do Docker Host caso não exista ele procura no Registry e depois armazena no Host |
+| $ docker run    | Basta passa o nome da imagem ele é procurando no Docker Host caso não exista ele procura no Registry e depois joga a imagem no repositório de imagens local e depois instância ela em um container |
+| $ docker images | Lista as imagens                |
+| $ docker ps     | Lista os containers em execução |
+| $ docker ps -a  | Lista todos os containers       |
+| $ docker rm     | Para remover um container basta digita os 4 primeiros digitor do COINTAINER ID (Para encontrar o ID basta executar docker ps) |
+| $ docker rm i   | Para remover uma imagem basta digita os 4 primeiros digitor do IMAGE ID (Para encontrar o ID basta executar docker images ) |
