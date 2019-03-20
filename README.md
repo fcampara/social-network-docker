@@ -64,11 +64,7 @@ Com essa grande evolução começou ocorrer uma demanda maior dos servidores, lo
 ![alt Ecossistema Docekr](https://docs.docker.com/engine/images/architecture.svg)
 ### Comands Docker
 
-| COMANDOS&nbsp;&nbsp;
-  &nbsp;&nbsp;&nbsp;
-  &nbsp;&nbsp;&nbsp;
-  &nbsp;&nbsp;&nbsp;
-  &nbsp;&nbsp;&nbsp;      | DESCRIÇÃO                                                                                                            |
+| COMANDOS     | DESCRIÇÃO                                                                                                            |
 | -------------------------    | -------------------------------------------------------------------------------------------------------------------- |
 | `$ docker build`             | Constrói uma imagem                                                                                                  |
 | `$ docker build . `          | Executa o Dockerfile                                                                                                 |
