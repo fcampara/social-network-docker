@@ -61,11 +61,11 @@ Com essa grande evolução começou ocorrer uma demanda maior dos servidores, lo
 
 | COMANDOS        | DESCRIÇÃO           |
 | --------------- | ------------------- |
-| $ docker build  | Constrói uma imagem |
-| $ docker pull   | Baixa uma imagem, esse é imagem baixada do Docker Host caso não exista ele procura no Registry e depois armazena no Host |
-| $ docker run    | Basta passa o nome da imagem ele é procurando no Docker Host caso não exista ele procura no Registry e depois joga a imagem no repositório de imagens local e depois instância ela em um container |
-| $ docker images | Lista as imagens                |
-| $ docker ps     | Lista os containers em execução |
-| $ docker ps -a  | Lista todos os containers       |
-| $ docker rm     | Para remover um container basta digita os 4 primeiros digitor do COINTAINER ID (Para encontrar o ID basta executar docker ps) |
-| $ docker rm i   | Para remover uma imagem basta digita os 4 primeiros digitor do IMAGE ID (Para encontrar o ID basta executar docker images ) |
+| `$ docker build`  | Constrói uma imagem |
+| `$ docker pull`   | Baixa uma imagem, esse é imagem baixada do Docker Host caso não exista ele procura no Registry e depois armazena no Host |
+| `$ docker run`    | Basta passa o nome da imagem ele é procurando no Docker Host caso não exista ele procura no Registry e depois joga a imagem no repositório de imagens local e depois instância ela em um container |
+| `$ docker images` | Lista as imagens                |
+| `$ docker ps`     | Lista os containers em execução |
+| `$ docker ps -a`  | Lista todos os containers       |
+| `$ docker rm`     | Para remover um container basta digita os 4 primeiros digitor do COINTAINER ID (Para encontrar o ID basta executar docker ps) |
+| `$ docker rm i`   | Para remover uma imagem basta digita os 4 primeiros digitor do IMAGE ID (Para encontrar o ID basta executar docker images ) |
