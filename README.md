@@ -68,9 +68,7 @@ Com essa grande evolução começou ocorrer uma demanda maior dos servidores, lo
   &nbsp;&nbsp;&nbsp;
   &nbsp;&nbsp;&nbsp;
   &nbsp;&nbsp;&nbsp;
-  &nbsp;&nbsp;&nbsp;
-  &nbsp;&nbsp;&nbsp;
-  &nbsp;                       | DESCRIÇÃO                                                                                                            |
+  &nbsp;&nbsp;&nbsp;      | DESCRIÇÃO                                                                                                            |
 | -------------------------    | -------------------------------------------------------------------------------------------------------------------- |
 | `$ docker build`             | Constrói uma imagem                                                                                                  |
 | `$ docker build . `          | Executa o Dockerfile                                                                                                 |
