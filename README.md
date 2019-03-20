@@ -1,5 +1,6 @@
 ### Required
 [Node.js and NPM](https://nodejs.org/en/download/)
+
 [Docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-using-the-repository)
 
 È aconselhável utilizar Linux, pois no windows Docker irá instalar um SO linux em seus sistema para poder executar
