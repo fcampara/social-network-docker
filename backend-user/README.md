@@ -51,3 +51,8 @@ In .env.dev set MONGO_URI (URL your database) and SECRET_OR_KEY (To JWT key)
 ```
   $ npm start
 ```
+
+### DOCKER
+
+ In this docker file i use the next repository
+ - [docker pull node](https://hub.docker.com/_/node)
