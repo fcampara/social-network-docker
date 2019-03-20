@@ -48,7 +48,7 @@ Com essa grande evolução começou ocorrer uma demanda maior dos servidores, lo
  - Custo de desenvolvimento grande
 
 # Container
-  Um container possui todas as configuração para o nosso serviço, tanto quanto frotnend e backend, basicamente é uma imagem (é a base para gerar 1 ou N containers, é construida atráves de um arquivo chamado Dockerfile) com todas as configurações necessárias, mas subir essa imagem e utilizar em seu servidor. Um comparativo de container é as máquinas virtuais, podendo criar várias snapshots com as configurações do nosso serviço, mas o problema disso que acaba se tornando custoso pela questão que a cada snapshot devemos instalar um SO por completo e não iremos utilizar todos os recursos dele. Diferente do Container que ele é isolado mas compartilha o mesmo SO, logo poupando recurso computacional.
+  Um container possui todas as configuração para o nosso serviço, tanto quanto frotnend e backend, basicamente é uma imagem (é a base para gerar 1 ou N containers, é construida atráves de um arquivo chamado [Dockerfile](https://docs.docker.com/engine/reference/builder/)) com todas as configurações necessárias, mas subir essa imagem e utilizar em seu servidor. Um comparativo de container é as máquinas virtuais, podendo criar várias snapshots com as configurações do nosso serviço, mas o problema disso que acaba se tornando custoso pela questão que a cada snapshot devemos instalar um SO por completo e não iremos utilizar todos os recursos dele. Diferente do Container que ele é isolado mas compartilha o mesmo SO, logo poupando recurso computacional.
 
   ![alt Comparação entre Hypervirsos e Container](http://imesh.github.io/images/contvsvm.png)
   > Hypervisor X Container
@@ -57,15 +57,34 @@ Com essa grande evolução começou ocorrer uma demanda maior dos servidores, lo
 
   Para entender o ecossistema do Docker, é interessante saber como funciona, ele é dividio em várias camadas, sendo a primeira o Client aonde será executado os comando, Host aonde fica armazenada as imagens e o containers e o Registry sendo aonde busca as imagens do Docker. Utilizaremos o [Docker Registry](https://hub.docker.com/) pois é o repositório oficial do Docker.
 
+# Dockerfile
+
+  Arquivo que será inserido os comandos para pode executar o docker, cada linha que for inserida será gerada um layer para ele, isso signifca que será criado 'pausas', caso ocorrá algum erro ou atualziar um parter do arquivo docker saberá da onde começar a partir de sua layer, então é aconselhável sempre pensar na ordem de criação deixar sempre ações que irão gerar mais tempo de processamento por último
+
+![alt Ecossistema Docekr](https://docs.docker.com/engine/images/architecture.svg)
 ### Comands Docker
 
-| COMANDOS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| DESCRIÇÃO           |
-| --------------- | ------------------- |
-| `$ docker build`  | Constrói uma imagem |
-| `$ docker pull`   | Baixa uma imagem, esse é imagem baixada do Docker Host caso não exista ele procura no Registry e depois armazena no Host |
-| `$ docker run`    | Basta passa o nome da imagem ele é procurando no Docker Host caso não exista ele procura no Registry e depois joga a imagem no repositório de imagens local e depois instância ela em um container |
-| `$ docker images` | Lista as imagens                |
-| `$ docker ps`     | Lista os containers em execução |
-| `$ docker ps -a`  | Lista todos os containers       |
-| `$ docker rm`     | Para remover um container basta digita os 4 primeiros digitor do COINTAINER ID (Para encontrar o ID basta executar docker ps) |
-| `$ docker rm i`   | Para remover uma imagem basta digita os 4 primeiros digitor do IMAGE ID (Para encontrar o ID basta executar docker images ) |
+| COMANDOS&nbsp;&nbsp;
+  &nbsp;&nbsp;&nbsp;
+  &nbsp;&nbsp;&nbsp;
+  &nbsp;&nbsp;&nbsp;
+  &nbsp;&nbsp;&nbsp;
+  &nbsp;&nbsp;&nbsp;
+  &nbsp;                       | DESCRIÇÃO                                                                                                            |
+| -------------------------    | -------------------------------------------------------------------------------------------------------------------- |
+| `$ docker build`             | Constrói uma imagem                                                                                                  |
+| `$ docker build . `          | Executa o Dockerfile                                                                                                 |
+| `$ docker build -t ${name}`  | Executa o Dockerfile e insere um tag para essa imagem                                                                |
+| `$ docker pull` | Baixa uma imagem, esse é imagem baixada do Docker Host caso não exista ele procura no Registry e depois armazena no Host |
+| `$ docker run -d ${name}`  | Executa a imagem em background, liberando o terminal |
+| `$ docker run -d -p ${port-external}:${port-internal} ${name}` | Mapeia a porta necessário para export o container, pois pode existir várias imagens                                                                    na mesma instância, pois a porta port-internal é fixa mas a port-external é                                                                            dinâmica |
+| `$ docker run`               | Basta passa o nome da imagem ele é procurando no Docker Host caso não exista ele procura no Registry e depois joga a
+                                 imagem no repositório de imagens local e depois instância ela em um container                                        |
+| `$ docker images`            | Lista as imagens                                                                                                     |
+| `$ docker images`            | Lista as imagens                                                                                                     |
+| `$ docker ps`                | Lista os containers em execução                                                                                      |
+| `$ docker ps -a`             | Lista todos os containers                                                                                            |
+| `$ docker rm`                | Para remover um container basta digita os 4 primeiros digitor do COINTAINER ID (Para encontrar o ID basta executar                                     docker ps)                                                                                                           |
+| `$ docker rm i`              | Para remover uma imagem basta digita os 4 primeiros digitor do IMAGE ID (Para encontrar o ID basta executar docker                                     images )                                                                                                             |
+| `$ docker ps -a`             | Lista todos os containers                                                                                            |
+| `$ docker inspect ${name}`   | Descreve o que está ocorrendo na execução do docker passando o name (Para encontrar o name basta digitar docker ps)  |
