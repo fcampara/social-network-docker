@@ -64,7 +64,13 @@ Com essa grande evolução começou ocorrer uma demanda maior dos servidores, lo
 ![alt Ecossistema Docekr](https://docs.docker.com/engine/images/architecture.svg)
 ### Comands Docker
 
-| COMANDOS                     | DESCRIÇÃO                                                                                                            |
+| COMANDOS&nbsp;&nbsp;
+  &nbsp;&nbsp;&nbsp;
+  &nbsp;&nbsp;&nbsp;
+  &nbsp;&nbsp;&nbsp;
+  &nbsp;&nbsp;&nbsp;
+  &nbsp;&nbsp;&nbsp;
+  &nbsp;                       | DESCRIÇÃO                                                                                                            |
 | -------------------------    | -------------------------------------------------------------------------------------------------------------------- |
 | `$ docker build`             | Constrói uma imagem                                                                                                  |
 | `$ docker build . `          | Executa o Dockerfile                                                                                                 |
@@ -72,7 +78,8 @@ Com essa grande evolução começou ocorrer uma demanda maior dos servidores, lo
 | `$ docker pull` | Baixa uma imagem, esse é imagem baixada do Docker Host caso não exista ele procura no Registry e depois armazena no Host |
 | `$ docker run -d ${name}`  | Executa a imagem em background, liberando o terminal |
 | `$ docker run -d -p ${port-external}:${port-internal} ${name}` | Mapeia a porta necessário para export o container, pois pode existir várias imagens                                                                    na mesma instância, pois a porta port-internal é fixa mas a port-external é                                                                            dinâmica |
-| `$ docker run`               | Basta passa o nome da imagem ele é procurando no Docker Host caso não exista ele procura no Registry e depois joga a imagem no repositório de imagens local e depois instância ela em um container                                        |
+| `$ docker run`               | Basta passa o nome da imagem ele é procurando no Docker Host caso não exista ele procura no Registry e depois joga a
+                                 imagem no repositório de imagens local e depois instância ela em um container                                        |
 | `$ docker images`            | Lista as imagens                                                                                                     |
 | `$ docker images`            | Lista as imagens                                                                                                     |
 | `$ docker ps`                | Lista os containers em execução                                                                                      |
