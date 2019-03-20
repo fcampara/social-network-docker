@@ -59,7 +59,7 @@ Com essa grande evolução começou ocorrer uma demanda maior dos servidores, lo
 
 ### Comands Docker
 
-| COMANDOS        | DESCRIÇÃO           |
+| COMANDOS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| DESCRIÇÃO           |
 | --------------- | ------------------- |
 | `$ docker build`  | Constrói uma imagem |
 | `$ docker pull`   | Baixa uma imagem, esse é imagem baixada do Docker Host caso não exista ele procura no Registry e depois armazena no Host |
