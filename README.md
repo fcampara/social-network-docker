@@ -62,7 +62,16 @@ Com essa grande evolução começou ocorrer uma demanda maior dos servidores, lo
 
   Arquivo que será inserido os comandos para pode executar o docker, cada linha que for inserida será gerada um layer para ele, isso signifca que será criado 'pausas', caso ocorrá algum erro ou atualziar um parter do arquivo docker saberá da onde começar a partir de sua layer, então é aconselhável sempre pensar na ordem de criação deixar sempre ações que irão gerar mais tempo de processamento por último
 
+# Docker Registry
+
+  Docker Registry ou Docker Hub nada mais que um sistema de SCM, aonde possibilita guarda as imagens de desenvolvimento, semelhante ao github, primeiro a imagem deve estar gerada
+
+# Docker Composer
+
+  Ajuda a compor aplicações (como o própio nome diz), de vez subir cada serviço manualmente, o composer facilita ajudando a subir todos os serviços juntos com apenas um comando, para instalar basta olha a [documentação](https://docs.docker.com/compose/install/)
+
 ![alt Ecossistema Docekr](https://docs.docker.com/engine/images/architecture.svg)
+
 ### Comands Docker
 
 | COMANDOS                     | DESCRIÇÃO                                                                                                            |
@@ -75,10 +84,11 @@ Com essa grande evolução começou ocorrer uma demanda maior dos servidores, lo
 | `$ docker run -d -p ${port-external}:${port-internal} ${name}` | Mapeia a porta necessário para export o container, pois pode existir várias imagens                                                                    na mesma instância, pois a porta port-internal é fixa mas a port-external é                                                                            dinâmica |
 | `$ docker run`               | Basta passa o nome da imagem ele é procurando no Docker Host caso não exista ele procura no Registry e depois joga a imagem no repositório de imagens local e depois instância ela em um container                                        |
 | `$ docker images`            | Lista as imagens                                                                                                     |
-| `$ docker images`            | Lista as imagens                                                                                                     |
 | `$ docker ps`                | Lista os containers em execução                                                                                      |
 | `$ docker ps -a`             | Lista todos os containers                                                                                            |
 | `$ docker rm`                | Para remover um container basta digita os 4 primeiros digitor do COINTAINER ID (Para encontrar o ID basta executar                                     docker ps)                                                                                                           |
 | `$ docker rm i`              | Para remover uma imagem basta digita os 4 primeiros digitor do IMAGE ID (Para encontrar o ID basta executar docker                                     images )                                                                                                             |
 | `$ docker ps -a`             | Lista todos os containers                                                                                            |
 | `$ docker inspect ${name}`   | Descreve o que está ocorrendo na execução do docker passando o name (Para encontrar o name basta digitar docker ps)  |
+| `$ docker login`              | Para acessar seu docker hub |
+| `$ docker push ${image_name}` | Para dar push na imagem criada |
