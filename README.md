@@ -72,6 +72,63 @@ Com essa grande evolução começou ocorrer uma demanda maior dos servidores, lo
 
 ![alt Ecossistema Docekr](https://docs.docker.com/engine/images/architecture.svg)
 
+# Cloud Native
+
+  Uma aplicação Cloud Native é uma aplicação orientada a micro-serviços, possui uma camada REST, tem empacotamento em container e pode ser dinâmicamente gerenciada por um orquestrador.
+
+# Kubernetes
+
+  [Kubernetes](https://kubernetes.io/) é uma ferramenta OpenSource que faz gestão de aplicações em container atráves de recuros como deployments, updates, scaling, e lifecycles, é mantido pela [Cloud Native Compunting Foundation](https://www.cncf.io/). Algo muito interessante do Kubernetes que atualmente [Azure AKS](https://azure.microsoft.com/pt-br/services/kubernetes-service/), [Digital Ocean](https://www.digitalocean.com/products/kubernetes/), [IBM Cloud Kubernetes Services](https://www.ibm.com/br-pt/cloud/container-service) e [AWS EKS](https://aws.amazon.com/pt/eks/) aceitam Kubernetes, logo é uma tecnologia interessante pela sua possibilidade de portabilidade entre provedores de cloud.
+
+### Instalação
+
+  Basta seguir a [documentação oficial](https://kubernetes.io/docs/setup/independent/install-kubeadm/) que está disponivel no site do kubernetes, meu ambiente de desenvovliment está sendo em um Notebook com as seguintes configurações
+
+  ### Hardware
+  - I7-6700HQ CPU @ 2.60GHz
+  - DDR4 2400 Mhz 8Gb
+  - GTX 970M
+
+ ### Software
+ - Ubuntu 18.04
+ - Docker 18.09.3[
+
+Como irei executar o Kubernetes em meu Notebook e estou utilizando o Ubuntu necessito desabilitar o SWAP para verificar se está habilitado ou não basta utilizar o htop, caso não tenho basta instalar.
+
+```
+  $ sudo apt install htop
+  $ htop
+```
+
+Para desativar o Swap basta utilizar o seguinte comando.
+
+```
+  $ sudo swapoff -a
+```
+
+Após podemos iniciar iniciar a instalação do Kubernetes. Iremos instalar 3 ferramentas Kubelet, kubeadm e kubectl
+  - Kubectl: Irá ficar assistindo os Nodes, é um engine interna,
+  - Kubeadm: Irá instalar o kubernetes (toolbox), ajuda na instalação
+  - Kubectl: É um empactador, ele é nosso cliente.
+
+ ```
+   $ sudo su
+   $ apt-get update && apt-get install -y apt-transport-https curl
+   $ curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+   $ cat <<EOF >/etc/apt/sources.list.d/kubernetes.list
+   $ deb https://apt.kubernetes.io/ kubernetes-xenial main
+   $ EOF
+   $ apt-get update
+   $ apt-get install -y kubelet kubeadm kubectl
+   $ apt-mark hold kubelet kubeadm kubectl
+   $ mkdir -p $HOME/.kube
+   $ cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+   $ sudo chown $(id -u):$(id -g) $HOME/.kube/config
+ ```
+
+ Com esses comandos nos instalamos o cliente, demos permissões para o kubectl e já podemos visualizar o kubectl
+
+
 ### Comands Docker
 
 | COMANDOS                     | DESCRIÇÃO                                                                                                            |
@@ -92,3 +149,21 @@ Com essa grande evolução começou ocorrer uma demanda maior dos servidores, lo
 | `$ docker inspect ${name}`   | Descreve o que está ocorrendo na execução do docker passando o name (Para encontrar o name basta digitar docker ps)  |
 | `$ docker login`              | Para acessar seu docker hub |
 | `$ docker push ${image_name}` | Para dar push na imagem criada |
+
+### Comands Docker Composer
+
+| COMANDOS                                        | DESCRIÇÃO                              |
+| --------------------------------------------    | -------------------------------------- |
+| `$ docker-compose up -d `                       | Executar o arquivo do docker           |
+| `$ docker-compose ps `                          | Lista as images do composer executando |
+| `$ docker-compose logs `                        | Exibi um log da execução               |
+| `$ watch docker-compose ps`                     | Fica assistindo o container            |
+| `$ docker-compose scale ${image}=${N}`          | Fica assistindo o container            |
+
+
+### Comands Kubernetes
+| COMANDOS                                | DESCRIÇÃO                                   |
+| --------------------------------------- | ------------------------------------------- |
+| `$ kubectl cluster-info`                | Info aonde o kubectl está sendo executado   |
+| `$ kubect get nodes`                    | Verifica os nodes                           |
+| `$ watch kubectl all --all-namespaces`  | Pega todos os recursos dentro do kubernetes |
