@@ -91,7 +91,7 @@ Com essa grande evolução começou ocorrer uma demanda maior dos servidores, lo
 
  ### Software
  - Ubuntu 18.04
- - Docker 18.09.3[
+ - Docker 18.09.3
 
 Como irei executar o Kubernetes em meu Notebook e estou utilizando o Ubuntu necessito desabilitar o SWAP para verificar se está habilitado ou não basta utilizar o htop, caso não tenho basta instalar.
 
