@@ -126,8 +126,21 @@ Após podemos iniciar iniciar a instalação do Kubernetes. Iremos instalar 3 fe
    $ sudo chown $(id -u):$(id -g) $HOME/.kube/config
  ```
 
- Com esses comandos nos instalamos o cliente, demos permissões para o kubectl e já podemos visualizar o kubectl
+ Com esses comandos nos instalamos o cliente, demos permissões para o kubectl e já podemos visualizar o kubectl, agora podemos iniciar um cluster com o seguinte comando
 
+ ```
+  $ sudo kubeadm init --pod-network-cidr=10.244.0.0/16
+ ```
+
+Após sua criação é necessário criar a pasta do Kubernetes em sua home e copiar as configurações do mesmo.
+
+```
+  $ mkdir -p $HOME/.kube
+  $ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  $ sudo chown $(id -u):$(id -g) $HOME/.kube/config
+```
+
+Feito isso Kube está configurado para ser acessado,caso seja necessário podemos verificar a chave do mesmo no arquivo `.kube/config`
 
 ### Comands Docker
 
@@ -162,8 +175,8 @@ Após podemos iniciar iniciar a instalação do Kubernetes. Iremos instalar 3 fe
 
 
 ### Comands Kubernetes
-| COMANDOS                                | DESCRIÇÃO                                   |
-| --------------------------------------- | ------------------------------------------- |
-| `$ kubectl cluster-info`                | Info aonde o kubectl está sendo executado   |
-| `$ kubect get nodes`                    | Verifica os nodes                           |
-| `$ watch kubectl all --all-namespaces`  | Pega todos os recursos dentro do kubernetes |
+| COMANDOS                                    | DESCRIÇÃO                                   |
+| ------------------------------------------- | ------------------------------------------- |
+| `$ kubectl cluster-info`                    | Info aonde o kubectl está sendo executado   |
+| `$ kubect get nodes`                        | Verifica os nodes                           |
+| `$ watch kubectl get all --all-namespaces`  | Pega todos os recursos dentro do kubernetes |
