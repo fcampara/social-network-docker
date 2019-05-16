@@ -107,7 +107,7 @@ Para desativar o Swap basta utilizar o seguinte comando.
 ```
 
 Após podemos iniciar iniciar a instalação do Kubernetes. Iremos instalar 3 ferramentas Kubelet, kubeadm e kubectl
-  - Kubectl: Irá ficar assistindo os Nodes, é um engine interna,
+  - Kubectl: Irá ficar assistindo os Nodes (as máquinas), é um engine interna,
   - Kubeadm: Irá instalar o kubernetes (toolbox), ajuda na instalação
   - Kubectl: É um empactador, ele é nosso cliente.
 
@@ -147,16 +147,59 @@ Feito isso Kube está configurado para ser acessado,caso seja necessário podemo
 Uma definicação rápida e simples de Pods é um grupo de um ou mais contâiners que compartilha a rede e o armazenamento.
 
 Nesta aplicação será utilizado um POD chamado [Flannel](https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/#pod-network), para fazer a instalação dele é simples basta seguir os seguintes passos.
+
+Swap deve estar desabilitado
+```
+  $ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.10.0/Documentation/kube-flannel.yml
+```
+Por padrão o kubernetes não roda nada dentro do seu node master, mas podemos conseguir rodar tudo no mesmo node, apenas necessário rodar o seguinte comando
+
+```
+ $ kubectl taint nodes --all node-role.kubernetes.io/master-
+```
+
+Agora foi finalizado a inicialização e a configuração do Kubernetes, agora temos um node master finalizado e permitindo executar tudo nele mesmo.
+
+Por conhecimento será subido um serviço simples e padrão para testes, pode ser encontrado na documentação do Kubernetes, para fazer isso basta executar o seguinte comando
+
+![Kubernetes Cluster](https://d33wubrfki0l68.cloudfront.net/152c845f25df8e69dd24dd7b0836a289747e258a/4a1d2/docs/tutorials/kubernetes-basics/public/images/module_02_first_app.svg)
+
+```
+  $ kubectl run kubernetes-bootcamp --image=gcr.io/google-samples/kubernetes-bootcamp:v1 --port=8080
+```
+
+O comando a cima, criou um deployment dentro da master, para poder rodar os containers dentro dele mesmo. Agora para verificar se está disponivel o deployment basta executar
+
+```
+ $ kubectl get deployment
+```
+Ao executar o comando de criação de imagem ocorre os seguintes casos, ele criou no node master um deployment, o deploymnet informa que necessita criar uma instância da imagem informada e gerou um pod, o kubernetes atráves do master se comunica com os outros nodes e pede para ser criado um container. Não conseguimos comunicar diretamente com o serviço para isso poder ocorrer devemos abrir um proxy diretamente esse caso utilizamos mais para o desenvolvimento.
+
+```
+  $ kubectl proxy
+```
+
+Com o proxy liberado conseguimos acessar diretamente dentro do nodes apenas com um curl e podemos chamar um serviço a partir do proxy
+
+```
+ $ curl 127.0.0.1:8001
+ $ curl http://localhost:8001/api/v1/namespaces/default/pods/$POD_NAMES/proxy/
+```
+
+## Arquivos Yaml
+
+É um descritor de Deployment, server para ser gerado as váriavéis de ambientes e configurações especificas para o deployment
+
 ### Comands Docker
 
 | COMANDOS                     | DESCRIÇÃO                                                                                                            |
 | -------------------------    | -------------------------------------------------------------------------------------------------------------------- |
 | `$ docker build`             | Constrói uma imagem                                                                                                  |
 | `$ docker build . `          | Executa o Dockerfile                                                                                                 |
-| `$ docker build -t ${name}`  | Executa o Dockerfile e insere um tag para essa imagem                                                                |
+| `$ docker build -t ${NAME}`  | Executa o Dockerfile e insere um tag para essa imagem                                                                |
 | `$ docker pull` | Baixa uma imagem, esse é imagem baixada do Docker Host caso não exista ele procura no Registry e depois armazena no Host |
-| `$ docker run -d ${name}`  | Executa a imagem em background, liberando o terminal |
-| `$ docker run -d -p ${port-external}:${port-internal} ${name}` | Mapeia a porta necessário para export o container, pois pode existir várias imagens                                                                    na mesma instância, pois a porta port-internal é fixa mas a port-external é                                                                            dinâmica |
+| `$ docker run -d ${NAME}`  | Executa a imagem em background, liberando o terminal |
+| `$ docker run -d -p ${PORT-EXTERNAL}:${PORT-INTERNAL} ${NAME}` | Mapeia a porta necessário para export o container, pois pode existir várias imagens                                                                    na mesma instância, pois a porta port-internal é fixa mas a port-external é                                                                            dinâmica |
 | `$ docker run`               | Basta passa o nome da imagem ele é procurando no Docker Host caso não exista ele procura no Registry e depois joga a imagem no repositório de imagens local e depois instância ela em um container                                        |
 | `$ docker images`            | Lista as imagens                                                                                                     |
 | `$ docker ps`                | Lista os containers em execução                                                                                      |
@@ -164,9 +207,9 @@ Nesta aplicação será utilizado um POD chamado [Flannel](https://kubernetes.io
 | `$ docker rm`                | Para remover um container basta digita os 4 primeiros digitor do COINTAINER ID (Para encontrar o ID basta executar                                     docker ps)                                                                                                           |
 | `$ docker rm i`              | Para remover uma imagem basta digita os 4 primeiros digitor do IMAGE ID (Para encontrar o ID basta executar docker                                     images )                                                                                                             |
 | `$ docker ps -a`             | Lista todos os containers                                                                                            |
-| `$ docker inspect ${name}`   | Descreve o que está ocorrendo na execução do docker passando o name (Para encontrar o name basta digitar docker ps)  |
+| `$ docker inspect ${NAME}`   | Descreve o que está ocorrendo na execução do docker passando o name (Para encontrar o name basta digitar docker ps)  |
 | `$ docker login`              | Para acessar seu docker hub |
-| `$ docker push ${image_name}` | Para dar push na imagem criada |
+| `$ docker push ${IMAGE_NAME}` | Para dar push na imagem criada |
 
 ### Comands Docker Composer
 
@@ -185,3 +228,8 @@ Nesta aplicação será utilizado um POD chamado [Flannel](https://kubernetes.io
 | `$ kubectl cluster-info`                    | Info aonde o kubectl está sendo executado   |
 | `$ kubect get nodes`                        | Verifica os nodes                           |
 | `$ watch kubectl get all --all-namespaces`  | Pega todos os recursos dentro do kubernetes |
+| `$ kubectl get pods`                        | Informa os pods que estão sendo executados  |
+| `$ kubectl logs`                            | Informa os logs que estão sendo exibidos    |
+| `$ kubectl logs`                            | Informa os logs que estão sendo exibidos    |
+| `$ kubectl get deploy ${PODNAMES}`          | Acessar o recurso estruturado               |
+| `$ kubectl edit deploy ${PODNAMES}`         | Alterar o recurso estruturado               |
