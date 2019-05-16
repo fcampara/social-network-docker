@@ -142,6 +142,11 @@ Após sua criação é necessário criar a pasta do Kubernetes em sua home e cop
 
 Feito isso Kube está configurado para ser acessado,caso seja necessário podemos verificar a chave do mesmo no arquivo `.kube/config`
 
+### PODS
+
+Uma definicação rápida e simples de Pods é um grupo de um ou mais contâiners que compartilha a rede e o armazenamento.
+
+Nesta aplicação será utilizado um POD chamado [Flannel](https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/#pod-network), para fazer a instalação dele é simples basta seguir os seguintes passos.
 ### Comands Docker
 
 | COMANDOS                     | DESCRIÇÃO                                                                                                            |
