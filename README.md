@@ -143,8 +143,7 @@ Após sua criação é necessário criar a pasta do Kubernetes em sua home e cop
 Feito isso Kube está configurado para ser acessado,caso seja necessário podemos verificar a chave do mesmo no arquivo `.kube/config`
 
 ### PODS
-
-Uma definicação rápida e simples de Pods é um grupo de um ou mais contâiners que compartilha a rede e o armazenamento.
+É a menor unidade dentro do Kubernetes, uma definicação rápida e simples de Pods é um grupo de um ou mais contâiners que compartilha a rede e o armazenamento. Acontece de ter mais containers caso há um banco que deve ser escalado junto com a aplicação
 
 Nesta aplicação será utilizado um POD chamado [Flannel](https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/#pod-network), para fazer a instalação dele é simples basta seguir os seguintes passos.
 
@@ -186,9 +185,49 @@ Com o proxy liberado conseguimos acessar diretamente dentro do nodes apenas com 
  $ curl http://localhost:8001/api/v1/namespaces/default/pods/$POD_NAMES/proxy/
 ```
 
-## Arquivos Yaml
+## Namespaces (NS)
+
+É a segregação lógica dos componentes, iremos aplicar em cluster diferentes componentes em estados diferentes, stagin e o production. O que possibilita ter N ambientes lógicos como Desenvolvimento, Homologação e Produção, são fatias de nosso cluster físico
+
+## Deployment
+Criamos um deploy via linha de comando e também via arquivo YAML tambêm sendo possível editar esse arquivo
+
+## Arquivos YAML
 
 É um descritor de Deployment, server para ser gerado as váriavéis de ambientes e configurações especificas para o deployment
+
+
+## Staging
+
+É a versão que está indo para a produção, um ambiente de homologação
+
+## Production
+
+É a versão estavél do software que está no ar em execução para os usuários
+
+## Kube-System (PADRÃO)
+
+Não é ideal mexer pois aonde está locado todoso os componentes que serão utilizados para o kubernetes para funcionar
+
+Quando executados o comando `$ kubectl run kubernetes-bootcamp --image=gcr.io/google-samples/kubernetes-bootcamp:v1 --port=8080` e `kubectl taint nodes --all node-role.kubernetes.io/master-` criamos um ambiente de stagin que será executado um deployment, sendo que o taint é para pode ser executado dentro do node master. O deployment gera um arquivo YAML, internamente antes de subir um POD é seguindo um passo a passo.
+
+- Será gerado um recurso chamado Replica Set
+- Replica Set irá cuidar a quantidade de pods
+- Dentro dos Pods será inserido nossos containers
+- Dentro dos container estaram os serviços (para acessar precisamos do proxy), nesse momento não existe como ter acesso ao mundo externo.
+
+### Replica Set
+É o componente que irá manter os Pods, ele sempre irá monitorar e manter a quantidade de execuções(pods) informada na criação do deployment. Não é inserido nada e não é alterado, só alteramos o Deployment. (Replica Set é um recurso operacional do nosso Deployment)
+
+### [Service](https://kubernetes.io/docs/concepts/services-networking/service/)
+Forma de os container dentro dos pods poderem se comunicar com o mundo externo, para fazer isso podemos utilizazr o comando
+
+```
+  $ kubectl expose deployment
+```
+
+Expose cria um service por padrão o `Cluster IP` e todos os services iram criar um arquivo YAML, será gerado um service do tipo `cluster IP`, ele tem a funcionbilidade de expor os pods dentro do nosso cluster, assim outros services consegue acessar esse cluster (Isso é apenas para expor internamente). Temos o `Load Balancer` ele irá fazer um bind com o Cloud Provider e irá expor o IP externo e por último temos `Node Port` ele tambêm irá fazer um bind com uma porta do nosso Node.js, a porta definida irá ficar escutando na porta do nosso cluster assim basta fazer um CURL para o ip e porta e assim iremos conseguir consumir a nossa aplicação.
+
 
 ### Comands Docker
 
