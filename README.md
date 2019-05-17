@@ -228,6 +228,19 @@ Forma de os container dentro dos pods poderem se comunicar com o mundo externo, 
 
 Expose cria um service por padrão o `Cluster IP` e todos os services iram criar um arquivo YAML, será gerado um service do tipo `cluster IP`, ele tem a funcionbilidade de expor os pods dentro do nosso cluster, assim outros services consegue acessar esse cluster (Isso é apenas para expor internamente). Temos o `Load Balancer` ele irá fazer um bind com o Cloud Provider e irá expor o IP externo e por último temos `Node Port` ele tambêm irá fazer um bind com uma porta do nosso Node.js, a porta definida irá ficar escutando na porta do nosso cluster assim basta fazer um CURL para o ip e porta e assim iremos conseguir consumir a nossa aplicação.
 
+### Dashboard
+
+Agora para conhecimento iremos utilizar a Dashboard padrão do Kubernetes, para utilizar ela basta apenas executar o seguinte comando
+
+```
+  $ kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v1.10.1/src/deploy/recommended/kubernetes-dashboard.yaml
+```
+
+Está aplicação estará apenas rodando no `Cluster IP` será apenas acessivel internamente, para acessar externametne iremos precisar utilizar o `NodePort` com o próximo comando iremos expor nossa aplicação para o mundo externo. Sendo que `port` será a uma porta definada por nós para o acesso interna e a `target-port` será a porta que estará acessível externamente.
+
+```
+  $ kubectl expose deployment kubernetes-dashboard --name=kubernetes-dashboard-nodeport --port=443 --target-port=8443 --type=NodePort -n kube-system
+```
 
 ### Comands Docker
 
@@ -262,13 +275,14 @@ Expose cria um service por padrão o `Cluster IP` e todos os services iram criar
 
 
 ### Comands Kubernetes
-| COMANDOS                                    | DESCRIÇÃO                                   |
-| ------------------------------------------- | ------------------------------------------- |
-| `$ kubectl cluster-info`                    | Info aonde o kubectl está sendo executado   |
-| `$ kubect get nodes`                        | Verifica os nodes                           |
-| `$ watch kubectl get all --all-namespaces`  | Pega todos os recursos dentro do kubernetes |
-| `$ kubectl get pods`                        | Informa os pods que estão sendo executados  |
-| `$ kubectl logs`                            | Informa os logs que estão sendo exibidos    |
-| `$ kubectl logs`                            | Informa os logs que estão sendo exibidos    |
-| `$ kubectl get deploy ${PODNAMES}`          | Acessar o recurso estruturado               |
-| `$ kubectl edit deploy ${PODNAMES}`         | Alterar o recurso estruturado               |
+| COMANDOS                                          | DESCRIÇÃO                                   |
+| ------------------------------------------------- | ------------------------------------------- |
+| `$ kubectl cluster-info`                          | Info aonde o kubectl está sendo executado   |
+| `$ kubect get nodes`                              | Verifica os nodes                           |
+| `$ watch kubectl get all --all-namespaces`        | Pega todos os recursos dentro do kubernetes |
+| `$ kubectl get pods`                              | Informa os pods que estão sendo executados  |
+| `$ kubectl logs`                                  | Informa os logs que estão sendo exibidos    |
+| `$ kubectl logs`                                  | Informa os logs que estão sendo exibidos    |
+| `$ kubectl get deploy ${PODNAMES}`                | Acessar o recurso estruturado               |
+| `$ kubectl edit deploy ${PODNAMES}`               | Alterar o recurso estruturado               |
+| `$kubectl describe ${PODNAMES} -n kube-system`    | Pegar a descrição de um pod                 |
