@@ -58,6 +58,30 @@ Com essa grande evolução começou ocorrer uma demanda maior dos servidores, lo
 
   Para entender o ecossistema do Docker, é interessante saber como funciona, ele é dividio em várias camadas, sendo a primeira o Client aonde será executado os comando, Host aonde fica armazenada as imagens e o containers e o Registry sendo aonde busca as imagens do Docker. Utilizaremos o [Docker Registry](https://hub.docker.com/) pois é o repositório oficial do Docker.
 
+  ### Instalação
+
+  Para fazer a instalação é simples (totalmente aconselhavel utilizar Linux para utilzação de Docker). Primeiramente devemos inserir o repositório do Docker em nossa máquina
+
+  ```
+    $ sudo apt-get update
+    $ sudo apt-get install \ apt-transport-https \ ca-certificates \ curl \ gnupg-agent \ software-properties-common
+    $ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+    $ sudo add-apt-repository \ "deb [arch=amd64] https://download.docker.com/linux/ubuntu \ $(lsb_release -cs) \ stable"
+
+  ```
+
+  Com o repositório agora iremos instalar o Docker CE.
+
+  ```
+    $ sudo apt-get install docker-ce
+  ```
+
+  E por último definir o usuário para o docker
+
+  ```
+    $ sudo usermod -aG docker your-user
+  ```
+
 # Dockerfile
 
   Arquivo que será inserido os comandos para pode executar o docker, cada linha que for inserida será gerada um layer para ele, isso signifca que será criado 'pausas', caso ocorrá algum erro ou atualziar um parter do arquivo docker saberá da onde começar a partir de sua layer, então é aconselhável sempre pensar na ordem de criação deixar sempre ações que irão gerar mais tempo de processamento por último
@@ -116,14 +140,12 @@ Após podemos iniciar iniciar a instalação do Kubernetes. Iremos instalar 3 fe
    $ apt-get update && apt-get install -y apt-transport-https curl
    $ curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
    $ cat <<EOF >/etc/apt/sources.list.d/kubernetes.list
-   $ deb https://apt.kubernetes.io/ kubernetes-xenial main
-   $ EOF
+    deb https://apt.kubernetes.io/ kubernetes-xenial main
+    EOF
    $ apt-get update
    $ apt-get install -y kubelet kubeadm kubectl
    $ apt-mark hold kubelet kubeadm kubectl
    $ mkdir -p $HOME/.kube
-   $ cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-   $ sudo chown $(id -u):$(id -g) $HOME/.kube/config
  ```
 
  Com esses comandos nos instalamos o cliente, demos permissões para o kubectl e já podemos visualizar o kubectl, agora podemos iniciar um cluster com o seguinte comando
