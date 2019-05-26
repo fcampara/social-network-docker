@@ -108,14 +108,7 @@ Com essa grande evolução começou ocorrer uma demanda maior dos servidores, lo
 
   Basta seguir a [documentação oficial](https://kubernetes.io/docs/setup/independent/install-kubeadm/) que está disponivel no site do kubernetes, meu ambiente de desenvovliment está sendo em um Notebook com as seguintes configurações
 
-  ### Hardware
-  - I7-6700HQ CPU @ 2.60GHz
-  - DDR4 2400 Mhz 8Gb
-  - GTX 970M
-
- ### Software
- - Ubuntu 18.04
- - Docker 18.09.3
+Para um ambiente mais real, tudo será feito em um VMs (Máquina virtual) que estará hospeda na Google Cloud. Primeiro devemos [alocar nossa máquina](https://console.cloud.google.com/compute/instances), estarei utilizando uma máquina de 8Gb com 2 núcleos de processamentos. Para conseguirmos utilizar tambêm devemos criar regras para o Fire wall, nas configurações devemos liberar as seguintes portas 30000-32767. Feito isso devemos editar nossa Instância inseriondo o nome do nosso firewall configurado.
 
 Como irei executar o Kubernetes em meu Notebook e estou utilizando o Ubuntu necessito desabilitar o SWAP para verificar se está habilitado ou não basta utilizar o htop, caso não tenho basta instalar.
 
@@ -264,6 +257,45 @@ Está aplicação estará apenas rodando no `Cluster IP` será apenas acessivel 
   $ kubectl expose deployment kubernetes-dashboard --name=kubernetes-dashboard-nodeport --port=443 --target-port=8443 --type=NodePort -n kube-system
 ```
 
+Com a nossa Dashboard exposta ao mundo real basta identificarmos qual é a sua porta exposta, para verificar basta digitar o seguinte comando
+
+```
+  $ kubectl get all --all-namespaces
+```
+
+Será informado o nome dos nosso services, como anterimos definimos que o nome do nosso service de dashboard seria kubernetes-dashboard-nodeport, basta olharmos para a linha do mesmo.
+No caso da minha execução a porta exibida foi 32210, como foi criado uma VMs na Cloud deixarei ativado para exibição do projeto, para acessar basta acessar o seguinte link [https://35.226.15.29:32110](https://35.226.15.29:32110).
+
+Em primeiro acesso devemos configurar o token de acesso, para isso primeiros devemos verificar o arquivo de YAML, pois nele foi criado um `Service Account` devemos acessar-ló e pegar o nome, após isso devemos dar um `describe` na sua `service account`.
+
+```
+  $ kubectl describe sa kubernetes-dashboard -n kube-system
+```
+
+Descoberto o nome do token agora devemos pega o token por completo 
+
+```
+  $ kubectl get secret ${TOKEN} -n kube-system -o yaml
+```
+
+Agora temos o token por completo, mas mesmo assim não podemos utilizar ele na Dashboard pois está em base64, devemos decodificar ele, para isso bastar executar o seguinte passo
+
+```
+  $ echo ${SECRET} | base64 decode
+```
+
+Agora temos o token para ser inserido na Dashboard, feito isso teremos conectado na nossa Dashboard, mas temos um problema ainda, o usuário do `service account` ele tem a permissão miníma, não pode ver nada da nossa Dashboard ( A real função dele é apenas para pode criar toda a nossa Dashboard ). Devemos criar nosso próprio usuário com o seguintes comandos.
+
+```
+  $ kubectl create serviceaccount ${USERNAME} -n kube-system
+  $ kubectl create clusterrolebinding ${USERNAME}-binding --clusterrole=cluster-admin --serviceaccount=kube-system:kubeadmin
+  $ kubectl describe sa ${USERNAME} -n kube-system
+  $ kubectl get secret ${TOKEN} -n kube-system -o yaml
+```
+
+Feito isso foi criado o usuário, dado permissãoes de adminstrador a ele, recuperado o token e decodificado o mesmo. Agora podemos usar o token para acessar o Kubernetes como adminstrador
+
+
 ### Comands Docker
 
 | COMANDOS                     | DESCRIÇÃO                                                                                                            |
@@ -307,4 +339,6 @@ Está aplicação estará apenas rodando no `Cluster IP` será apenas acessivel 
 | `$ kubectl logs`                                  | Informa os logs que estão sendo exibidos    |
 | `$ kubectl get deploy ${PODNAMES}`                | Acessar o recurso estruturado               |
 | `$ kubectl edit deploy ${PODNAMES}`               | Alterar o recurso estruturado               |
-| `$kubectl describe ${PODNAMES} -n kube-system`    | Pegar a descrição de um pod                 |
+| `$ kubectl describe ${PODNAMES} -n kube-system`    | Pegar a descrição de um pod                 |
+| `$ kubectl describe sa ${PODNAMES} -n kube-system` | Pega a descrição do service account de um pod |
+| `$ kubectl get secret ${TOKEN -n kube-system -o yaml` | Descobre a senha a partir do token |
