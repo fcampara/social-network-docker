@@ -293,7 +293,21 @@ Agora temos o token para ser inserido na Dashboard, feito isso teremos conectado
   $ kubectl get secret ${TOKEN} -n kube-system -o yaml
 ```
 
-Feito isso foi criado o usuário, dado permissãoes de adminstrador a ele, recuperado o token e decodificado o mesmo. Agora podemos usar o token para acessar o Kubernetes como adminstrador
+Feito isso foi criado o usuário, dado permissãoes de adminstrador a ele, recuperado o token e decodificado o mesmo. Agora podemos usar o token para acessar o Kubernetes como adminstrador. Agora obtido sucesso em ter criado um primerio Kubernetes com a configuração padrão, irei criar um arquivo YAML para gerar minha própria aplicação, na [página do Kubernetes na documentação](https://kubernetes.io/docs/concepts/services-networking/service/#defining-a-service) existe expecificações de como utilizar, iremos definir da forma mais básica possível
+
+```
+  apiVersion: v1
+  kind: Service
+  metadata:
+    name: kubernetes-dashboard-nodeport-yaml
+  spec:
+    selector:
+      app: 
+    ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 9376
+```
 
 
 ### Comands Docker
