@@ -6,6 +6,7 @@
 È aconselhável utilizar Linux, pois no windows Docker irá instalar um SO linux em seus sistema para poder executar
 
 # Introdução
+
   Como as aplicações eram construidas nos últimos 20 anos? Boa parte da evolução se da conta pela popularização de alguns ecossistemas (Internet, Mobile e IoT).
 
 ![alt Gráfico evolução da internet](http://missaodevops.com.br/img/warrior/cap03-ecommerce-growth-2018.png)
@@ -14,41 +15,52 @@
 Com essa grande evolução começou ocorrer uma demanda maior dos servidores, logo precisando de servidores mais potentes e para isso tendo que investir valores grandes em seus equipamentos para poder manter um serviço de qualidade online, logo gastando valores exorbitantes.
 
 # Monolitos
+
   Arquitetura de desenvolvimento bastante utilizada durante os últimos 20 anos, para uma aplicação monolito a aplicação sempre será empacotada junta (Frontend e backend), toda essa aplicação é entregue dentro de um application server (Servidor) ele que irá cuidar para fazer o Host da aplicação. Existe recursos que são muito utilizados nesse modelo de arquitetura que são as [session](###-session) e [application](###-applcation)
 
 ### Session
+
   Muito utilizada para armazenas a sessão do usuário (escopo do usuário), ficará sempre na memória do servidor (enquanto estiver em execução) isso é uma caracteristica forte de [stateful](###-stateful)
 
 ### Application
+
   É uma informação que fica definida por todo application server, que será acessado pelos usuários que estão na session. Isso facilita toda a logística.
 
 ### Stateful
+
  Tudo que é persistido durante a execução do application server
 
 ### Vantagens
+
 - Pool Conexão
 - Cache
 - Filas
 
 ### Desvantagem
+
 - Você se torna amarrado
 - Grandes dificuldades para subir um novo serviço
 - Escalabilidade custosa e gera dificuldades técnicas para compartilhar seus usuários e suas sessions, pois no load balancer os usuários podem ser enviados para qualquer aplicação, logo deve se manter as informações em ambos servidores
 - Gera custos adicionais para cuidar do auto-scale, pois deve ser manter máquinas sempre em funcionamento para os momentos de picos
 
 # Microserviços
+
   Nessa tipo de arquitetura a aplicação fica dividida em partes (Frontend e Backend), um conceito básico do microserviço  que ele seja [statless](###-statless), assim podendo subir partes diferentes do serviço e usuário pode acessar qualquer um dos serviços sem problema nenhum e não tem réplicas de dados desnecessários, logo gerando agilidade para o desenvolvimento, e sendo capaz de corrigir partes de um módulo sem afetar nenhuma outra parte do serviço.
 
-### Statless
+## Statless
+
   Não armazena nenhum tipo de configuração do usuário, facilitando na criação de replicas dos serviços.
 
- ### Vantagens
- - Facilidade no auto-scale
+## Vantagens
 
- ### Desvantagens
+- Facilidade no auto-scale
+
+### Desvantagens
+
  - Custo de desenvolvimento grande
 
 # Container
+
   Um container possui todas as configuração para o nosso serviço, tanto quanto frotnend e backend, basicamente é uma imagem (é a base para gerar 1 ou N containers, é construida atráves de um arquivo chamado [Dockerfile](https://docs.docker.com/engine/reference/builder/)) com todas as configurações necessárias, mas subir essa imagem e utilizar em seu servidor. Um comparativo de container é as máquinas virtuais, podendo criar várias snapshots com as configurações do nosso serviço, mas o problema disso que acaba se tornando custoso pela questão que a cada snapshot devemos instalar um SO por completo e não iremos utilizar todos os recursos dele. Diferente do Container que ele é isolado mas compartilha o mesmo SO, logo poupando recurso computacional.
 
   ![alt Comparação entre Hypervirsos e Container](http://imesh.github.io/images/contvsvm.png)
@@ -58,17 +70,17 @@ Com essa grande evolução começou ocorrer uma demanda maior dos servidores, lo
 
   Para entender o ecossistema do Docker, é interessante saber como funciona, ele é dividio em várias camadas, sendo a primeira o Client aonde será executado os comando, Host aonde fica armazenada as imagens e o containers e o Registry sendo aonde busca as imagens do Docker. Utilizaremos o [Docker Registry](https://hub.docker.com/) pois é o repositório oficial do Docker.
 
-  ### Instalação
+### Instalação
 
   Para fazer a instalação é simples (totalmente aconselhavel utilizar Linux para utilzação de Docker). Primeiramente devemos inserir o repositório do Docker em nossa máquina
 
-  ```
-    $ sudo apt-get update
-    $ sudo apt-get install \ apt-transport-https \ ca-certificates \ curl \ gnupg-agent \ software-properties-common
-    $ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-    $ sudo add-apt-repository \ "deb [arch=amd64] https://download.docker.com/linux/ubuntu \ $(lsb_release -cs) \ stable"
+```
+  $ sudo apt-get update
+  $ sudo apt-get install \ apt-transport-https \ ca-certificates \ curl \ gnupg-agent \ software-properties-common
+  $ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+  $ sudo add-apt-repository \ "deb [arch=amd64] https://download.docker.com/linux/ubuntu \ $(lsb_release -cs) \ stable"
 
-  ```
+```
 
   Com o repositório agora iremos instalar o Docker CE.
 
@@ -288,34 +300,80 @@ Agora temos o token para ser inserido na Dashboard, feito isso teremos conectado
 
 ```
   $ kubectl create serviceaccount ${USERNAME} -n kube-system
-  $ kubectl create clusterrolebinding ${USERNAME}-binding --clusterrole=cluster-admin --serviceaccount=kube-system:kubeadmin
+  $ kubectl create clusterrolebinding ${USERNAME}-binding --clusterrole=cluster-admin --serviceaccount=kube-system:${USERNAME}
   $ kubectl describe sa ${USERNAME} -n kube-system
   $ kubectl get secret ${TOKEN} -n kube-system -o yaml
 ```
 
 Feito isso foi criado o usuário, dado permissãoes de adminstrador a ele, recuperado o token e decodificado o mesmo. Agora podemos usar o token para acessar o Kubernetes como adminstrador. Agora obtido sucesso em ter criado um primerio Kubernetes com a configuração padrão, irei criar um arquivo YAML para gerar minha própria aplicação, na [página do Kubernetes na documentação](https://kubernetes.io/docs/concepts/services-networking/service/#defining-a-service) existe expecificações de como utilizar, iremos definir da forma mais básica possível
 
-```
+```yaml
   apiVersion: v1
   kind: Service
   metadata:
     name: kubernetes-dashboard-nodeport-yaml
+    namespace: kube-system
   spec:
+    type: NodePort
     selector:
-      app: 
+      run: kubernetes-bootcamp
     ports:
     - protocol: TCP
-      port: 80
-      targetPort: 9376
+      port: 443
+      targetPort: 8443
 ```
 
+Com essas configurações pdoemos subir nosso primeiro pod descrito por um yaml, `name` é o nome que daremos ao nosos pod, `selector` deve ser verificado o nome dele no painel do Kubernetes e `ports`tem que vser verificado qual a porta que nosso container está sendo executada, como anteriormente definimos que a mesma seria na porta 8443, podemos utilizar a mesma. No servidor bastar executar os seguintes comandos
 
+```
+  $ nano ${FILE-NAME}.yaml
+  $ more ${FILE-NAME}.yaml
+  $ kubect apply -f ${FILE-NAME}.yaml
+```
+
+Com o comando `nano` nos criamos um arquivo com o nome definido, com esse arquivo criado basta copiar as configurações inseridas mais acima, o comando `more` só para verificar se o arquivo esta ok e por ultimo nos aplicamos nosso arquivos, devemos receber uma mensagem que o mesmo foi criado. Até agora foi seguido apenas exemplos do kubernetes para o conhecimento da ferramenta, a partir desse momento será montado uma aplicação a partir do projeto criado em Node.js e React.
+
+
+### Criando nosso Namespaces
+
+  Como dito anteriormente namespaces são ambientes de trabalhos, será feito três ambientes devops, prod e stagin. Para criar esses ambientes é simples, basta criar nosso arquivlo .yaml e passar as configurações de cada ambiente,
+  podemos seguir o descritor de deployment que está disponível na [documentação do kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#creating-a-deployment)
+
+```yaml
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: frontend
+    labels:
+      app: frontend
+  spec:
+    replicas: 2
+    selector:
+      matchLabels:
+        app: frontend
+    template:
+      metadata:
+        labels:
+          app: frontend
+      spec:
+        containers:
+        - name: frontend
+          image: fcamparasilva/frontend:alpha
+          ports:
+          - containerPort: 80
+  ```
+
+Neste yaml possui dois pontos de entrada, uma `metada` e o outro `spec`, sendo que `spec` vai inferir diretamente no pods enquanto o `metada` é nos service, dentro do `spec`temos três
+pontos de entrada, `selector`, `template`, `replicas`, `template` é o runtime do pods, isso significa que o pod irá subir com o label marcado como `frontend` (especificado no metadata),
+em passos anteriores foi criados as imagens do [Docker Hub](https://hub.docker.com/) e subido, agora iremos utilizar a mesma imagem no `spec containers`. Agora por útlimo está faltando o
+`selector`, todas vez que o deployment precisa achar um pod ou um service precisa chegar em um pod, eles sempre utilzam a label (mathLabels), é importante as labels em metada sejam iguais
+ao do matchLabels para eles poderem se encontrar
 ### Comands Docker
 
 | COMANDOS                     | DESCRIÇÃO                                                                                                            |
 | -------------------------    | -------------------------------------------------------------------------------------------------------------------- |
 | `$ docker build`             | Constrói uma imagem                                                                                                  |
-| `$ docker build . `          | Executa o Dockerfile                                                                                                 |
+| `$ docker build .`          | Executa o Dockerfile                                                                                                 |
 | `$ docker build -t ${NAME}`  | Executa o Dockerfile e insere um tag para essa imagem                                                                |
 | `$ docker pull` | Baixa uma imagem, esse é imagem baixada do Docker Host caso não exista ele procura no Registry e depois armazena no Host |
 | `$ docker run -d ${NAME}`  | Executa a imagem em background, liberando o terminal |
@@ -335,24 +393,25 @@ Feito isso foi criado o usuário, dado permissãoes de adminstrador a ele, recup
 
 | COMANDOS                                        | DESCRIÇÃO                              |
 | --------------------------------------------    | -------------------------------------- |
-| `$ docker-compose up -d `                       | Executar o arquivo do docker           |
-| `$ docker-compose ps `                          | Lista as images do composer executando |
-| `$ docker-compose logs `                        | Exibi um log da execução               |
+| `$ docker-compose up -d`                       | Executar o arquivo do docker           |
+| `$ docker-compose ps`                          | Lista as images do composer executando |
+| `$ docker-compose logs`                        | Exibi um log da execução               |
 | `$ watch docker-compose ps`                     | Fica assistindo o container            |
 | `$ docker-compose scale ${image}=${N}`          | Fica assistindo o container            |
 
-
 ### Comands Kubernetes
-| COMANDOS                                          | DESCRIÇÃO                                   |
-| ------------------------------------------------- | ------------------------------------------- |
-| `$ kubectl cluster-info`                          | Info aonde o kubectl está sendo executado   |
-| `$ kubect get nodes`                              | Verifica os nodes                           |
-| `$ watch kubectl get all --all-namespaces`        | Pega todos os recursos dentro do kubernetes |
-| `$ kubectl get pods`                              | Informa os pods que estão sendo executados  |
-| `$ kubectl logs`                                  | Informa os logs que estão sendo exibidos    |
-| `$ kubectl logs`                                  | Informa os logs que estão sendo exibidos    |
-| `$ kubectl get deploy ${PODNAMES}`                | Acessar o recurso estruturado               |
-| `$ kubectl edit deploy ${PODNAMES}`               | Alterar o recurso estruturado               |
-| `$ kubectl describe ${PODNAMES} -n kube-system`    | Pegar a descrição de um pod                 |
-| `$ kubectl describe sa ${PODNAMES} -n kube-system` | Pega a descrição do service account de um pod |
-| `$ kubectl get secret ${TOKEN -n kube-system -o yaml` | Descobre a senha a partir do token |
+| COMANDOS                                              | DESCRIÇÃO                                        |
+| ----------------------------------------------------- | ------------------------------------------------ |
+| `$ kubectl cluster-info`                              | Info aonde o kubectl está sendo executado        |
+| `$ kubect get nodes`                                  | Verifica os nodes                                |
+| `$ watch kubectl get all --all-namespaces`            | Pega todos os recursos dentro do kubernetes      |
+| `$ kubectl get pods`                                  | Informa os pods que estão sendo executados       |
+| `$ kubectl logs`                                      | Informa os logs que estão sendo exibidos         |
+| `$ kubectl logs`                                      | Informa os logs que estão sendo exibidos         |
+| `$ kubectl get deploy ${PODNAMES}`                    | Acessar o recurso estruturado                    |
+| `$ kubectl edit deploy ${PODNAMES}`                   | Alterar o recurso estruturado                    |
+| `$ kubectl describe ${PODNAMES} -n kube-system`       | Pegar a descrição de um pod                      |
+| `$ kubectl describe sa ${PODNAMES} -n kube-system`    | Pega a descrição do service account de um pod    |
+| `$ kubectl get secret ${TOKEN -n kube-system -o yaml` | Descobre a senha a partir do token               |
+| `$ kubectl delete ${NAME} -n kube-system`             | Deleta um serviço do Kubect a partir do seu nome |
+| `$ kubectl get ns`                                    | Ver namespaces criados                           |
