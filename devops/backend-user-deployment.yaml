@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-user
+  labels:
+    app: backend-user
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend-user
+  template:
+    metadata:
+      labels:
+        app: backend-user
+    spec:
+      containers:
+      - name: backend-user
+        image: fcamparasilva/backend-user:alpha
+        ports:
+        - containerPort: 3020
+        env:
+        - name: NODE_ENV
+          value: "staging"
+        - name: MONGO_URL
+          value: "mongodb://felipe:abc123@ds211265.mlab.com:11265/wariorcamp"
+        - name: SECRET_OR_KEY
+          value: "b00tc4mp18"

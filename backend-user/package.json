@@ -4,11 +4,12 @@
   "description": "QuestCode: for amazons and warriors",
   "main": "server.js",
   "scripts": {
-    "start": "cp .env.dev .env && node server",
+    "start": "node server",
+    "dev": "cp .env.dev .env && node server",
     "server": "nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Rodrigo Rocha",
+  "author": "Felipe Campara",
   "license": "MIT",
   "dependencies": {
     "bcryptjs": "^2.4.3",
