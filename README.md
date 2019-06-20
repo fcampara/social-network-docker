@@ -7,9 +7,9 @@
 
 # Introdução
 
-  Como as aplicações eram construidas nos últimos 20 anos? Boa parte da evolução se da conta pela popularização de alguns ecossistemas (Internet, Mobile e IoT).
+  Como as aplicações era1m construidas nos últimos 20 anos? Boa parte da evolução se da conta pela popularização de alguns ecossistemas (Internet, Mobile e IoT).
 
-![alt Gráfico evolução da internet](http://missaodevops.com.br/img/warrior/cap03-ecommerce-growth-2018.png)
+![alt Gráfico evolução da internet](https://camo.githubusercontent.com/de7560299c05e0c395c63d2b2010a17738ec8da4/687474703a2f2f6d697373616f6465766f70732e636f6d2e62722f696d672f77617272696f722f63617030332d65636f6d6d657263652d67726f7774682d323031382e706e67)
 > Crescimento da utilização WEB
 
 Com essa grande evolução começou ocorrer uma demanda maior dos servidores, logo precisando de servidores mais potentes e para isso tendo que investir valores grandes em seus equipamentos para poder manter um serviço de qualidade online, logo gastando valores exorbitantes.
@@ -284,7 +284,7 @@ Em primeiro acesso devemos configurar o token de acesso, para isso primeiros dev
   $ kubectl describe sa kubernetes-dashboard -n kube-system
 ```
 
-Descoberto o nome do token agora devemos pega o token por completo 
+Descoberto o nome do token agora devemos pega o token por completo
 
 ```
   $ kubectl get secret ${TOKEN} -n kube-system -o yaml
