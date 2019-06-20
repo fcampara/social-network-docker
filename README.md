@@ -367,37 +367,39 @@ Neste yaml possui dois pontos de entrada, uma `metada` e o outro `spec`, sendo q
 pontos de entrada, `selector`, `template`, `replicas`, `template` é o runtime do pods, isso significa que o pod irá subir com o label marcado como `frontend` (especificado no metadata),
 em passos anteriores foi criados as imagens do [Docker Hub](https://hub.docker.com/) e subido, agora iremos utilizar a mesma imagem no `spec containers`. Agora por útlimo está faltando o
 `selector`, todas vez que o deployment precisa achar um pod ou um service precisa chegar em um pod, eles sempre utilzam a label (mathLabels), é importante as labels em metada sejam iguais
-ao do matchLabels para eles poderem se encontrar
+ao do matchLabels para eles poderem se encontrar. Feito isso poderá ser acesso a aplicação a partir do IP externo da sua aplicação.
 ### Comands Docker
 
-| COMANDOS                     | DESCRIÇÃO                                                                                                            |
-| -------------------------    | -------------------------------------------------------------------------------------------------------------------- |
-| `$ docker build`             | Constrói uma imagem                                                                                                  |
-| `$ docker build .`          | Executa o Dockerfile                                                                                                 |
-| `$ docker build -t ${NAME}`  | Executa o Dockerfile e insere um tag para essa imagem                                                                |
-| `$ docker pull` | Baixa uma imagem, esse é imagem baixada do Docker Host caso não exista ele procura no Registry e depois armazena no Host |
-| `$ docker run -d ${NAME}`  | Executa a imagem em background, liberando o terminal |
-| `$ docker run -d -p ${PORT-EXTERNAL}:${PORT-INTERNAL} ${NAME}` | Mapeia a porta necessário para export o container, pois pode existir várias imagens                                                                    na mesma instância, pois a porta port-internal é fixa mas a port-external é                                                                            dinâmica |
-| `$ docker run`               | Basta passa o nome da imagem ele é procurando no Docker Host caso não exista ele procura no Registry e depois joga a imagem no repositório de imagens local e depois instância ela em um container                                        |
-| `$ docker images`            | Lista as imagens                                                                                                     |
-| `$ docker ps`                | Lista os containers em execução                                                                                      |
-| `$ docker ps -a`             | Lista todos os containers                                                                                            |
-| `$ docker rm`                | Para remover um container basta digita os 4 primeiros digitor do COINTAINER ID (Para encontrar o ID basta executar                                     docker ps)                                                                                                           |
-| `$ docker rm i`              | Para remover uma imagem basta digita os 4 primeiros digitor do IMAGE ID (Para encontrar o ID basta executar docker                                     images )                                                                                                             |
-| `$ docker ps -a`             | Lista todos os containers                                                                                            |
-| `$ docker inspect ${NAME}`   | Descreve o que está ocorrendo na execução do docker passando o name (Para encontrar o name basta digitar docker ps)  |
-| `$ docker login`              | Para acessar seu docker hub |
-| `$ docker push ${IMAGE_NAME}` | Para dar push na imagem criada |
+| COMANDOS                                    | DESCRIÇÃO                                                                                                                     |
+| ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `$ docker build .`                          | Executa o Dockerfile                                                                                                          |
+| `$ docker build -t ${NAME}`                 | Executa o Dockerfile e insere um tag para essa imagem                                                                         |
+| `$ docker pull`                             | Baixa uma imagem, esse é imagem baixada do Docker Host caso não exista ele procura no Registry e depois armazena no Host      |
+| `$ docker run`                              | Basta passa o nome da imagem ele é procurando no Docker Host caso não exista ele procura no Registry e depois joga a imagem no repositório de imagens local e depois instância ela em um container |
+| `$ docker run -d ${NAME}`                   | Executa a imagem em background, liberando o terminal                                                                          |
+| `$ docker run -d -p ${PORT-EXTERNAL}:${PORT-INTERNAL} ${NAME}` | Mapeia a porta necessário para export o container, pois pode existir várias imagens na mesma instância, pois a porta port-internal é fixa mas a port-external é dinâmica |
+| `$ docker images`                           | Lista as imagens                                                                                                              |
+| `$ docker ps`                               | Lista os containers em execução                                                                                               |
+| `$ docker rm`                               | Para remover um container basta digita os 4 primeiros digitor do COINTAINER ID (Para encontrar o ID basta executar docker ps) |
+| `$ docker rm -f`                            | Remover um container com force                                                                                                |
+| `$ docker rm i`                             | Para remover uma imagem basta digita os 4 primeiros digitor do IMAGE ID (Para encontrar o ID basta executar docker images )   |
+| `$ docker ps -a`                            | Lista todos os containers                                                                                                     |
+| `$ docker inspect ${NAME}`                  | Descreve o que está ocorrendo na execução do docker passando o name (Para encontrar o name basta digitar docker ps)           |
+| `$ docker login`                            | Para acessar seu docker hub                                                                                                   |
+| `$ docker push ${IMAGE-NAME}`               | Para dar push na imagem criada                                                                                                |
+| `$ docker exec -t ${CONTAINER-NAME} sh`     | Executa o container no modo iterativo                                                                                         |
+| `$ docker run -d --env NODE_ENV=${VARIABLE}`| Executa o container definindo uma váriavel de ambiente para o mesmo                                                           |
+| `$ docker logs ${IMAGE-NAME}`               | Exibi logs do container                                                                                                       |
 
 ### Comands Docker Composer
 
 | COMANDOS                                        | DESCRIÇÃO                              |
 | --------------------------------------------    | -------------------------------------- |
-| `$ docker-compose up -d`                       | Executar o arquivo do docker           |
-| `$ docker-compose ps`                          | Lista as images do composer executando |
-| `$ docker-compose logs`                        | Exibi um log da execução               |
+| `$ docker-compose up -d`                        | Executar o arquivo do docker           |
+| `$ docker-compose ps`                           | Lista as images do composer executando |
+| `$ docker-compose logs`                         | Exibi um log da execução               |
 | `$ watch docker-compose ps`                     | Fica assistindo o container            |
-| `$ docker-compose scale ${image}=${N}`          | Fica assistindo o container            |
+| `$ docker-compose scale ${IMAGE}=${N}`          | Faz o escalonamento dos containers     |
 
 ### Comands Kubernetes
 | COMANDOS                                              | DESCRIÇÃO                                        |
@@ -406,7 +408,6 @@ ao do matchLabels para eles poderem se encontrar
 | `$ kubect get nodes`                                  | Verifica os nodes                                |
 | `$ watch kubectl get all --all-namespaces`            | Pega todos os recursos dentro do kubernetes      |
 | `$ kubectl get pods`                                  | Informa os pods que estão sendo executados       |
-| `$ kubectl logs`                                      | Informa os logs que estão sendo exibidos         |
 | `$ kubectl logs`                                      | Informa os logs que estão sendo exibidos         |
 | `$ kubectl get deploy ${PODNAMES}`                    | Acessar o recurso estruturado                    |
 | `$ kubectl edit deploy ${PODNAMES}`                   | Alterar o recurso estruturado                    |
