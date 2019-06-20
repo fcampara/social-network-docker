@@ -402,17 +402,19 @@ ao do matchLabels para eles poderem se encontrar. Feito isso poderá ser acesso 
 | `$ docker-compose scale ${IMAGE}=${N}`          | Faz o escalonamento dos containers     |
 
 ### Comands Kubernetes
-| COMANDOS                                              | DESCRIÇÃO                                        |
-| ----------------------------------------------------- | ------------------------------------------------ |
-| `$ kubectl cluster-info`                              | Info aonde o kubectl está sendo executado        |
-| `$ kubect get nodes`                                  | Verifica os nodes                                |
-| `$ watch kubectl get all --all-namespaces`            | Pega todos os recursos dentro do kubernetes      |
-| `$ kubectl get pods`                                  | Informa os pods que estão sendo executados       |
-| `$ kubectl logs`                                      | Informa os logs que estão sendo exibidos         |
-| `$ kubectl get deploy ${PODNAMES}`                    | Acessar o recurso estruturado                    |
-| `$ kubectl edit deploy ${PODNAMES}`                   | Alterar o recurso estruturado                    |
-| `$ kubectl describe ${PODNAMES} -n kube-system`       | Pegar a descrição de um pod                      |
-| `$ kubectl describe sa ${PODNAMES} -n kube-system`    | Pega a descrição do service account de um pod    |
-| `$ kubectl get secret ${TOKEN -n kube-system -o yaml` | Descobre a senha a partir do token               |
-| `$ kubectl delete ${NAME} -n kube-system`             | Deleta um serviço do Kubect a partir do seu nome |
-| `$ kubectl get ns`                                    | Ver namespaces criados                           |
+| COMANDOS                                              | DESCRIÇÃO                                                 |
+| ----------------------------------------------------- | --------------------------------------------------------- |
+| `$ kubectl cluster-info`                              | Info onde o kubectl está sendo executado                  |
+| `$ kubect get nodes`                                  | Verifica os nodes                                         |
+| `$ watch kubectl get all --all-namespaces`            | Pega todos os recursos dentro do kubernetes               |
+| `$ kubectl get pods`                                  | Informa os pods que estão sendo executados                |
+| `$ kubectl logs`                                      | Informa os logs que estão sendo exibidos                  |
+| `$ kubectl get deploy ${PODNAMES}`                    | Acessar o recurso estruturado                             |
+| `$ kubectl edit deploy ${PODNAMES}`                   | Alterar o recurso estruturado                             |
+| `$ kubectl describe ${PODNAMES} -n kube-system`       | Pegar a descrição de um pod                               |
+| `$ kubectl describe sa ${PODNAMES} -n kube-system`    | Pega a descrição do service account de um pod             |
+| `$ kubectl get secret ${TOKEN -n kube-system -o yaml` | Descobre a senha a partir do token                        |
+| `$ kubectl delete ${NAME} -n kube-system`             | Deleta um serviço do Kubect a partir do seu nome          |
+| `$ kubectl get ns`                                    | Ver namespaces criados                                    |
+| `$ kubectl apply -f ${NAME}`                          | Aplica um arquivo YAML para o cluster                     |
+| `$ kubectl apply -f ${NAME} --namespace ${AMBIENTE}`  | Aplica um arquvio YYAML para o cluser e define o ambiente |
