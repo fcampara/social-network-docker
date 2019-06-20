@@ -1,5 +1,5 @@
 kind: Service
-apiVersion: V1
+apiVersion: v1
 metadata:
   name: backend-user
 spec:

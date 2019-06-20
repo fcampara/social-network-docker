@@ -416,5 +416,6 @@ ao do matchLabels para eles poderem se encontrar. Feito isso poderá ser acesso 
 | `$ kubectl get secret ${TOKEN -n kube-system -o yaml` | Descobre a senha a partir do token                        |
 | `$ kubectl delete ${NAME} -n kube-system`             | Deleta um serviço do Kubect a partir do seu nome          |
 | `$ kubectl get ns`                                    | Ver namespaces criados                                    |
+| `$ kubect get all -n ${AMBIENTE}`                     | Verifica todos os serviços criado para o ambiente         |
 | `$ kubectl apply -f ${NAME}`                          | Aplica um arquivo YAML para o cluster                     |
 | `$ kubectl apply -f ${NAME} --namespace ${AMBIENTE}`  | Aplica um arquvio YYAML para o cluser e define o ambiente |
