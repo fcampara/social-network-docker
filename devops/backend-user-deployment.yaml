@@ -22,7 +22,7 @@ spec:
         env:
         - name: NODE_ENV
           value: "staging"
-        - name: MONGO_URL
+        - name: MONGO_URI
           value: "mongodb://felipe:abc123@ds211265.mlab.com:11265/wariorcamp"
         - name: SECRET_OR_KEY
           value: "b00tc4mp18"

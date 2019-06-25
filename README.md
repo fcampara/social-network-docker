@@ -367,13 +367,152 @@ Neste yaml possui dois pontos de entrada, uma `metada` e o outro `spec`, sendo q
 pontos de entrada, `selector`, `template`, `replicas`, `template` é o runtime do pods, isso significa que o pod irá subir com o label marcado como `frontend` (especificado no metadata),
 em passos anteriores foi criados as imagens do [Docker Hub](https://hub.docker.com/) e subido, agora iremos utilizar a mesma imagem no `spec containers`. Agora por útlimo está faltando o
 `selector`, todas vez que o deployment precisa achar um pod ou um service precisa chegar em um pod, eles sempre utilzam a label (mathLabels), é importante as labels em metada sejam iguais
-ao do matchLabels para eles poderem se encontrar. Feito isso poderá ser acesso a aplicação a partir do IP externo da sua aplicação.
+ao do matchLabels para eles poderem se encontrar. Feito isso poderá ser acesso a aplicação a partir do IP externo da aplicação. Criado o YAML do frontend, agora será desenvolvido para o primeiro backend criado que é o de user. Nesse backend iremos começar a criar nossos ambientes, o primerio será de staging, para definir o ambiente basta inserir um nova flag
+
+```
+  kubectl apply -f backend-user-serivce.yaml -n staging
+```
+
+```yaml
+kind: Service
+apiVersion: v1
+metadata:
+  name: backend-user
+spec:
+  type: NodePort
+  selector:
+    app: backend-user
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3020
+```
+
+Com o services criado iremos fazer o deployment da nossa imagem de docker.
+
+```
+  kubectl apply -f backend-user-deployment.yaml -n staging
+```
+
+```yaml
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: backend-user
+    labels:
+      app: backend-user
+  spec:
+    replicas: 2
+    selector:
+      matchLabels:
+        app: backend-user
+    template:
+      metadata:
+        labels:
+          app: backend-user
+      spec:
+        containers:
+        - name: backend-user
+          image: fcamparasilva/backend-user:alpha
+          ports:
+          - containerPort: 3020
+          env:
+          - name: NODE_ENV
+            value: "staging"
+          - name: MONGO_URI
+            value: "mongodb://felipe:abc123@ds211265.mlab.com:11265/wariorcamp"
+          - name: SECRET_OR_KEY
+            value: "b00tc4mp18"
+```
+
+Agora já temos nosso Frontend e backend de user sendo executado em nosso ambiente de staging, agora iremos criar nosso último microserviço que será o de scm.
+
+```
+  kubectl apply -f backend-service.yaml -n staging
+```
+
+```yaml
+kind: Service
+apiVersion: v1
+metadata:
+  name: backend-scm
+spec:
+  type: NodePort
+  selector:
+    app: backend-scm
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3030
+```
+
+```
+  kubectl apply -f backend-deployment.yaml -n staging
+```
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-scm
+  labels:
+    app: backend-scm
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend-scm
+  template:
+    metadata:
+      labels:
+        app: backend-scm
+    spec:
+      containers:
+      - name: backend-scm
+        image: fcamparasilva/backend-scm:alpha
+        ports:
+        - containerPort: 3030
+        env:
+        - name: NODE_ENV
+          value: "staging"
+        - name: GITHUB_CLIENT_ID
+          value: "e50ff23474ac9ae0a87a"
+        - name: GITHUB_CLIENT_SECRET
+          value: "0ab3cbde9601aafd574e13a8971f934755ae1d1d"
+        - name: SECRET_OR_KEY
+          value: "b00tc4mp18"
+```
+
+Com as três partes do sistema criadas e no nosso ambiente de Staging, agora teremos que fazer a comunicação entre elas, para isso devemos passar para o fronend qual ambiente ele estará executado, como o projeto está feito em REACT e qualquer framework atual no momento da geração o código gerado é estático logo não temos como passar dinâmicamente as váriaveis de ambientes e alterar em execução, então temos que fazer todas essas configurações diretamente no nosso arquivo de enviroment dentro do frontend e altera algumas partes do código do Docker file para receber as váriaveis que necessitamos.
+
+```Dockerfile
+  FROM node:8 as builder
+  ARG NPM_ENV=development
+
+  WORKDIR /usr/src/app
+  COPY package*.json ./
+  RUN npm install
+  COPY src/ ./src/
+  COPY public/ ./public/
+  RUN npm run build:${NPM_ENV}
+
+  FROM nginx:1.15.5
+  COPY --from=builder /usr/src/app/build/ /usr/share/nginx/html
+  EXPOSE 80
+```
+
+Em nosso arquivo Dockerfile apenas foi inserido uma linha e modificada outra, foi inserido `ARG` aqui podemos definir um váriavel que iremos passar na execução do build do docker e em `RUN` definimos qual o comando será exeuctado (Os comandos definidos para a execução estão dentro do .package.json). Para passar a váriavel na execução do Docker basta inserir --build-arg NPM_ENV=`{VARIAVEL}`
+
+```
+  docker build -t ${NAME-IMAGE} --build-arg ${ENV}=${VARIABLE}
+```
+
 ### Comands Docker
 
 | COMANDOS                                    | DESCRIÇÃO                                                                                                                     |
 | ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
 | `$ docker build .`                          | Executa o Dockerfile                                                                                                          |
-| `$ docker build -t ${NAME}`                 | Executa o Dockerfile e insere um tag para essa imagem                                                                         |
+| `$ docker build -t ${NAME} .`               | Executa o Dockerfile e insere um tag para essa imagem                                                                         |
 | `$ docker pull`                             | Baixa uma imagem, esse é imagem baixada do Docker Host caso não exista ele procura no Registry e depois armazena no Host      |
 | `$ docker run`                              | Basta passa o nome da imagem ele é procurando no Docker Host caso não exista ele procura no Registry e depois joga a imagem no repositório de imagens local e depois instância ela em um container |
 | `$ docker run -d ${NAME}`                   | Executa a imagem em background, liberando o terminal                                                                          |
@@ -390,6 +529,8 @@ ao do matchLabels para eles poderem se encontrar. Feito isso poderá ser acesso 
 | `$ docker exec -t ${CONTAINER-NAME} sh`     | Executa o container no modo iterativo                                                                                         |
 | `$ docker run -d --env NODE_ENV=${VARIABLE}`| Executa o container definindo uma váriavel de ambiente para o mesmo                                                           |
 | `$ docker logs ${IMAGE-NAME}`               | Exibi logs do container                                                                                                       |
+| `$ docker build -t ${NAME-IMAGE} --build-arg ${ENV}=${VARIABLE} .` | Gerar um build a passando um váriavel para o Dockerfile                                                |
+
 
 ### Comands Docker Composer
 
@@ -402,6 +543,7 @@ ao do matchLabels para eles poderem se encontrar. Feito isso poderá ser acesso 
 | `$ docker-compose scale ${IMAGE}=${N}`          | Faz o escalonamento dos containers     |
 
 ### Comands Kubernetes
+
 | COMANDOS                                              | DESCRIÇÃO                                                 |
 | ----------------------------------------------------- | --------------------------------------------------------- |
 | `$ kubectl cluster-info`                              | Info onde o kubectl está sendo executado                  |
