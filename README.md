@@ -506,6 +506,36 @@ Em nosso arquivo Dockerfile apenas foi inserido uma linha e modificada outra, fo
 ```
   docker build -t ${NAME-IMAGE} --build-arg ${ENV}=${VARIABLE}
 ```
+Com todos os services e deployment sendo executado corretamente irá ser feito uma correção para deixar no padrão WEB que temos uma regra que é: "O que é inerente ao ambiente fique no ambiente", nosso deployment temos uma env que defini em qual o ambiente o deployment será executado, isto está incorreto, para corrigir iremos usar um recurso do Kubernetes que é configMap.
+
+### ConfigMap
+
+  Ele ficará junto com o namespace, poderá ser criado vários configMap, tudo que for inerente ao ambiente será removido do deployment e inserido no nosso configMap
+
+Agora será configurado o configMap para nossos serviços, será gerado configurações para o nosso ambiente de staging e production.
+
+```yaml
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: questcode
+  namespace: staging
+data:
+  NODE_ENV: staging
+  GITHUB_CLIENT_ID: e50ff23474ac9ae0a87a
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: questcode
+  namespace: prod
+data:
+  NODE_ENV: production
+  GITHUB_CLIENT_ID: e50ff23474ac9ae0a87a
+```
+
+feito isso teremos que corrigi o nosso deployments e inserir para pegar os valores diretamente do nosso configMap
 
 ### Comands Docker
 
@@ -561,3 +591,5 @@ Em nosso arquivo Dockerfile apenas foi inserido uma linha e modificada outra, fo
 | `$ kubect get all -n ${AMBIENTE}`                     | Verifica todos os serviços criado para o ambiente         |
 | `$ kubectl apply -f ${NAME}`                          | Aplica um arquivo YAML para o cluster                     |
 | `$ kubectl apply -f ${NAME} --namespace ${AMBIENTE}`  | Aplica um arquvio YYAML para o cluser e define o ambiente |
+| `$ kubectl get all cm --all-namespaces`               | Exibi todos os config maps                                |
+| `$ kubectl exec -t ${POD-NAME} sh -n ${NAMESPACE}`    | Acessa linha de comando do pod                            |

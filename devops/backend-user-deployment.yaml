@@ -21,8 +21,17 @@ spec:
         - containerPort: 3020
         env:
         - name: NODE_ENV
-          value: "staging"
+          valueFrom:
+            configMapKeyRef:
+              name: questcode
+              key: NODE_ENV
         - name: MONGO_URI
-          value: "mongodb://felipe:abc123@ds211265.mlab.com:11265/wariorcamp"
+          valueFrom:
+            secretKeyRef:
+              name: questcode
+              key: MONGO_URI
         - name: SECRET_OR_KEY
-          value: "b00tc4mp18"
+          valueFrom:
+            secretKeyRef:
+              name: questcode
+              key: SECRET_OR_KEY
