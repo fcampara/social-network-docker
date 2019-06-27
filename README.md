@@ -556,6 +556,42 @@ Agora iremos utilizar o HELM, ele é um gerenciado do kubernetes, ele irá gerar
   $ ./get_helm.sh
 ```
 
+Feito isso nosso Helm está sendo executado no cluster, mas ele não possui nenhum permissão, terá que ser criado um ![SA]([https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/) para o mesmo.
+
+```YAML
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: tiller
+  namespace: kube-system
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: allresources
+rules:
+- apiGroups: ["*"]
+  resources: ["*"]
+  verbs: ["*"]
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: tiller
+subjects:
+- kind: ServiceAccount
+  namespace: kube-system
+  name: tiller
+  apiGroup: ""
+roleRef:
+  kind: ClusterRole
+  name: allresources
+  apiGroup: rbac.authorization.k8s.io
+```
+
+Com esse "service account" criada agora temos que informar para nossa HELM utilizar ela
+
 ### Comands Docker
 
 | COMANDOS                                    | DESCRIÇÃO                                                                                                                     |
