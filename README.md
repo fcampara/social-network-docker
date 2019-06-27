@@ -537,6 +537,25 @@ data:
 
 feito isso teremos que corrigi o nosso deployments e inserir para pegar os valores diretamente do nosso configMap
 
+### SecretMap
+  Semelhante ao configMap mas a inteção desse arquivo é sempre de manter as senhas, todas as senhas devem ser matindas em base64 (não por segunraça, mas sim por usabilidade do Kubernetes), no arquivo YAML será semelhante, iremos utilizar a chave secretRef.
+
+```YAML
+  secretKeyRef:
+    valueFrom:
+    name:
+```
+
+### HELM
+
+Agora iremos utilizar o HELM, ele é um gerenciado do kubernetes, ele irá gerar informações importantes para monitoramento, irá ajudar em deploy e roolback. Helm funciona da seguinte forma, ele será instalando no nosso server irá solicitar ao Kubernetes qual o kubesystem, iremos passar um SA (Service account) para o HELM poder gerenciar todas nossas aplicações. Para isso primeiro devemos fazer a instalação do pacote do HELM basta cessar a documentação e seguir os passos. Existem várias formas de instalação do mesmo, mas nesse estudo iremos seguir a instalação por script.
+
+```
+  $ curl -LO https://git.io/get_helm.sh
+  $ chmod 700 get_helm.sh
+  $ ./get_helm.sh
+```
+
 ### Comands Docker
 
 | COMANDOS                                    | DESCRIÇÃO                                                                                                                     |
