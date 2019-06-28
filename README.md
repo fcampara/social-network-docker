@@ -556,7 +556,7 @@ Agora iremos utilizar o HELM, ele é um gerenciado do kubernetes (Package manage
   $ ./get_helm.sh
 ```
 
-Feito isso nosso Helm está sendo executado no cluster, mas ele não possui nenhum permissão, terá que ser criado um ![SA]([https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/) para o mesmo.
+Feito isso nosso Helm está sendo executado no cluster, mas ele não possui nenhum permissão, terá que ser criado um [SA]([https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/) para o mesmo.
 
 ```YAML
 ---
@@ -587,7 +587,7 @@ subjects:
 roleRef:
   kind: ClusterRole
   name: allresources
-  apiGroup: rbac.authorization.k8s.io
+  apiGroup: rbac.authorization.k8s.ioP
 ```
 
 Com esse "service account" criada agora temos que informar para nossa HELM utilizar ela, iremos digitar um comando que irá pegar um arquivo criado no nosso sistema que terá a confugaração do nosso "tiller-patch", para aplicar iremos executar o seguinte comando.
@@ -603,7 +603,19 @@ spec:
       serviceAccountName: tiller
 ```
 
-Helm trabalha com repositórios de charts (mapas), o helms possui um ![repositório](https://github.com/helm/charts#helm-charts) do mesmo
+Helm trabalha com repositórios de charts (mapas), o helms possui um [repositório](https://github.com/helm/charts#helm-charts) do mesmo, agora será criado nosso primeiro chart, para iniciar iremos criar uma estrutura de pastas seguindo o padrão do Helm
+
+```folders
+  .
+    ├── ...
+    ├── charts                  # Pasta principal
+    │   ├── templates           # Onde irá ficar os deployment e services
+    │   │   ├── ...             # Deployment e services
+    │   ├── charts.yaml         # Tagueamento e versionamento do charts
+    │   └── values.yaml         # Várias definidas dentro dos deployment e services
+    └── ...
+```
+
 ### Comands Docker
 
 | COMANDOS                                    | DESCRIÇÃO                                                                                                                     |

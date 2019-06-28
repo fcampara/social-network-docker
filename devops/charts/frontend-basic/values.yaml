@@ -1,0 +1,10 @@
+image:
+  tag: alpha
+
+container:
+  port: 80
+
+services:
+  nodePort: 30080
+
+replicas: 2
