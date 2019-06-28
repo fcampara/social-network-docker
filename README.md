@@ -590,7 +590,7 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
 ```
 
-Com esse "service account" criada agora temos que informar para nossa HELM utilizar ela
+Com esse "service account" criada agora temos que informar para nossa HELM utilizar ela.
 
 ### Comands Docker
 
