@@ -548,7 +548,7 @@ feito isso teremos que corrigi o nosso deployments e inserir para pegar os valor
 
 ### HELM
 
-Agora iremos utilizar o HELM, ele é um gerenciado do kubernetes, ele irá gerar informações importantes para monitoramento, irá ajudar em deploy e roolback. Helm funciona da seguinte forma, ele será instalando no nosso server irá solicitar ao Kubernetes qual o kubesystem, iremos passar um SA (Service account) para o HELM poder gerenciar todas nossas aplicações. Para isso primeiro devemos fazer a instalação do pacote do HELM basta cessar a documentação e seguir os passos. Existem várias formas de instalação do mesmo, mas nesse estudo iremos seguir a instalação por script.
+Agora iremos utilizar o HELM, ele é um gerenciado do kubernetes (Package manager), ele irá gerar informações importantes para monitoramento, irá ajudar em deploy e roolback. Helm funciona da seguinte forma, ele será instalando no nosso server irá solicitar ao Kubernetes qual o kubesystem, iremos passar um SA (Service account) para o HELM poder gerenciar todas nossas aplicações. Para isso primeiro devemos fazer a instalação do pacote do HELM basta cessar a documentação e seguir os passos. Existem várias formas de instalação do mesmo, mas nesse estudo iremos seguir a instalação por script.
 
 ```
   $ curl -LO https://git.io/get_helm.sh
@@ -590,8 +590,20 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
 ```
 
-Com esse "service account" criada agora temos que informar para nossa HELM utilizar ela.
+Com esse "service account" criada agora temos que informar para nossa HELM utilizar ela, iremos digitar um comando que irá pegar um arquivo criado no nosso sistema que terá a confugaração do nosso "tiller-patch", para aplicar iremos executar o seguinte comando.
 
+```
+  $ kubectl patch deployment tiller-deploy -n kube-system --patch "$(cat ${FILE-NAME})
+```
+
+```YAML
+spec:
+  template:
+    spec:
+      serviceAccountName: tiller
+```
+
+Helm trabalha com repositórios de charts (mapas), o helms possui um ![repositório](https://github.com/helm/charts#helm-charts) do mesmo
 ### Comands Docker
 
 | COMANDOS                                    | DESCRIÇÃO                                                                                                                     |
@@ -648,3 +660,17 @@ Com esse "service account" criada agora temos que informar para nossa HELM utili
 | `$ kubectl apply -f ${NAME} --namespace ${AMBIENTE}`  | Aplica um arquvio YYAML para o cluser e define o ambiente |
 | `$ kubectl get all cm --all-namespaces`               | Exibi todos os config maps                                |
 | `$ kubectl exec -t ${POD-NAME} sh -n ${NAMESPACE}`    | Acessa linha de comando do pod                            |
+| `$ kubectl edit svc ${SERVICE-NAME} --all-namespaces` | Acessa no modo de edição o arquivo de service             |
+| `$ kubectl patch deployment tiller-deploy -n kube-system --patch "$(cat ${FILE-NAME})` | Acessa no modo de edição o arquivo de service |
+
+### Comands HELM
+
+| COMANDOS                                              | DESCRIÇÃO                                                         |
+| `$ helm repo update`                                  | Baixa os catálogos                                                |
+| `$ helm repo list`                                    | List repositórios                                                 |
+| `$ helm search ${WORDS-SEARCH}`                       | Faz uma pesquisa apartir do texto informado                       |
+| `$ helm search`                                       | List tudo que está no repositórios                                |
+| `$ helm install ${FILE}`                              | Faz uma instalação de algo listado no helm                        |
+| `$ helm status ${FILE}`                               | Exibir informações de algo instalado pelo helm                    |
+| `$ helm delete ${NAME}`                               | Delete algo instalado pelo instalador do helm                     |
+| `$ helm delete ${NAME} --purge`                       | Delete algo instalado pelo instalador do helm e limpa o histórico |
