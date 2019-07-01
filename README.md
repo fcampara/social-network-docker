@@ -622,6 +622,8 @@ Após ter criado nosso primeiro chart sozinho iremos utilizar a ferramente do he
   $ helm create frontend
 ```
 
+Com o conhecimento da craição de Charts e finalizado a criação dos charts do Frontend agora iremos proguedir para os outros dois microserviços o de frontend e o de backend.
+
 ### Comands Docker
 
 | COMANDOS                                    | DESCRIÇÃO                                                                                                                     |
