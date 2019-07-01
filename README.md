@@ -616,6 +616,12 @@ Helm trabalha com repositórios de charts (mapas), o helms possui um [repositór
     └── ...
 ```
 
+Após ter criado nosso primeiro chart sozinho iremos utilizar a ferramente do helm que gera automáticamente para nos para isso basta executar o seguinte comando
+
+```
+  $ helm create frontend
+```
+
 ### Comands Docker
 
 | COMANDOS                                    | DESCRIÇÃO                                                                                                                     |
@@ -683,6 +689,8 @@ Helm trabalha com repositórios de charts (mapas), o helms possui um [repositór
 | `$ helm search ${WORDS-SEARCH}`                       | Faz uma pesquisa apartir do texto informado                       |
 | `$ helm search`                                       | List tudo que está no repositórios                                |
 | `$ helm install ${FILE}`                              | Faz uma instalação de algo listado no helm                        |
+| `$ helm install . --name ${NAME} --namespace ${NAMESPACE}` | Cria a partir do diretório atual e define name e qual namespace irá pertencer |
 | `$ helm status ${FILE}`                               | Exibir informações de algo instalado pelo helm                    |
+| `$ helm create ${NAME}`                               | Cria automatátcimanete os arquivos necessários                   |
 | `$ helm delete ${NAME}`                               | Delete algo instalado pelo instalador do helm                     |
-| `$ helm delete ${NAME} --purge`                       | Delete algo instalado pelo instalador do helm e limpa o histórico |
+| `$ helm delete --purge ${NAME}`                       | Delete algo instalado pelo instalador do helm e limpa o histórico |
