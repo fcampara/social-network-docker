@@ -620,9 +620,24 @@ Após ter criado nosso primeiro chart sozinho iremos utilizar a ferramente do he
 
 ```
   $ helm create frontend
+  $ helm create backend-user
+  $ helm create backend-scm
 ```
 
 Com o conhecimento da craição de Charts e finalizado a criação dos charts do Frontend agora iremos proguedir para os outros dois microserviços o de frontend e o de backend.
+
+Com o todos os charts criados iremos armazenas nossos charts em algum lugar, existe um repositóry para os charts chamado "ChartMuseum", é um repository apenas em terminal criado em GoLang. Ele deve ser instalado e pode ser instalado pelo próprio Helm, poderemos criar um repositorio com o nome desejado e iremos publicar todos nossos charts dentro desse ChartMuseum, para fazer essa temos que criar um YAML com as configurações do ChartMuseum.
+
+```YAML
+  env:
+    open:
+      STORAGE: local
+      DISABLE_API: false
+      ALLOW_OVERWRITE: true
+  service:
+    type: NodePort
+    noddePort: 30010
+```
 
 ### Comands Docker
 
