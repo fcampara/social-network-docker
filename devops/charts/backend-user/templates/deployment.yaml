@@ -26,16 +26,16 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: {{ .Values.service.tagerPort }}
+              containerPort: {{ .Values.service.targetPort }}
               protocol: TCP
           livenessProbe:
             httpGet:
               path: /api/profile/test
-              port: {{ .Values.service.tagerPort }}
+              port: {{ .Values.service.targetPort }}
           readinessProbe:
             httpGet:
               path: /api/profile/test
-              port: {{ .Values.service.tagerPort }}
+              port: {{ .Values.service.targetPort }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
