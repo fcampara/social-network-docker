@@ -30,12 +30,12 @@ spec:
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /
-              port: http
+              path: /api/profile/test
+              port: {{ .Values.service.tagerPort }}
           readinessProbe:
             httpGet:
-              path: /
-              port: http
+              path: /api/profile/test
+              port: {{ .Values.service.tagerPort }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
