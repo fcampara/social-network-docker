@@ -5,17 +5,19 @@
 replicaCount: 1
 
 image:
-  repository: nginx
-  tag: stable
-  pullPolicy: IfNotPresent
+  repository: fcamparasilva/backend-scm
+  tag: alpha
+  pullPolicy: Always
 
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
 service:
-  type: ClusterIP
+  type: NodePort
   port: 80
+  targetPort: 3030
+  nodePort: 30030
 
 ingress:
   enabled: false
