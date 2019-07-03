@@ -642,7 +642,7 @@ Com o todos os charts criados iremos armazenas nossos charts em algum lugar, exi
 Com nosso YAML de configuração criada e nomeado como `chartmuseum-config.yaml` podemos executar ele e criar nosso repositório, iremos começar a trabalhar no nosso namespace devops.
 
 ```
-  $ helm install --name helm --namespace devops -f chartmuseum-config.yaml stable/chartmuseum
+  $ helm install --name charmuseum --namespace devops -f chartmuseum-config.yaml stable/chartmuseum
 ```
 
 Agora nosso repositório estara funcionando dentro do nosso cluster, agora vamos adicionar nosso repositório na lista do helm pos nos só temos o stable, para fazer isso basta digitar o seguinte comando
@@ -671,6 +671,25 @@ Agora com nosos plugin criado, nossos charts funcionando corretamente, agora vam
 
   $ helm repo update
 ```
+
+Feito isso temos todos nossos charts dentro do nosso repositório para ver é apenas necessário executar ` $ helm ls`, o prossimo passo sera gerar todos os nossos deploy a partir do nosso repositório, 
+
+```
+  $ helm install questcode/frontend --namespace staging --name staging-frontend
+  $ helm install questcode/backend-scm --namespace staging --name staging-backend-scm
+  $ helm install questcode/backend-user --namespace staging --name backend-user
+  
+```
+
+Agora temos todos os nossos charts instalado pelo nossos helm e utilizando o repositório, agora com todo os nossos charts rodando utilizando nosso repositório iremos fazer uma simulação de como seria um update para isso temos que gerar uma nova imagem do docker alterando a tag dele e depois subir para nosso repositório de imagens, feito isso iremos sobrescrever nosso Charts com o seguinte comando
+
+```
+  $ helm upgrade staging-backend-user questcode/backend-user --set image.tag=0.1.4
+```
+
+# Jenkins
+
+È uma ferramenta criada para fazer integração contínua (CI), iremos fazer a instalação do Jenkins por um arquivo YAML. Antes de tudo vamos criar um volume para nosso Jenkins para poder previnir qualquer crash teremos nossos dados salvos nesse volume.
 
 ### Comands Docker
 
@@ -741,7 +760,10 @@ Agora com nosos plugin criado, nossos charts funcionando corretamente, agora vam
 | `$ helm search`                                       | List tudo que está no repositórios                                |
 | `$ helm install ${FILE}`                              | Faz uma instalação de algo listado no helm                        |
 | `$ helm install . --name ${NAME} --namespace ${NAMESPACE}` | Cria a partir do diretório atual e define name e qual namespace irá pertencer |
+| `$ helm upgrade ${HELM-NAME} ${HELM-REPO} --set image.tag=${TAG-VERSION}` | Faz upgrade de um helm em execução            |
 | `$ helm status ${FILE}`                               | Exibir informações de algo instalado pelo helm                    |
+| `$ helm history ${HELM-NAME}`                         | Exibi o histórico do helm                                         |
+| `$ helm rollback ${HELM-NAME} ${REVISION-NUMBER}`     | Faz rollback para o ultimo deployment do helm                     |
 | `$ helm create ${NAME}`                               | Cria automatátcimanete os arquivos necessários                    |
 | `$ helm delete ${NAME}`                               | Delete algo instalado pelo instalador do helm                     |
 | `$ helm delete --purge ${NAME}`                       | Delete algo instalado pelo instalador do helm e limpa o histórico |
