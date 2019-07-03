@@ -639,6 +639,39 @@ Com o todos os charts criados iremos armazenas nossos charts em algum lugar, exi
     noddePort: 30010
 ```
 
+Com nosso YAML de configuração criada e nomeado como `chartmuseum-config.yaml` podemos executar ele e criar nosso repositório, iremos começar a trabalhar no nosso namespace devops.
+
+```
+  $ helm install --name helm --namespace devops -f chartmuseum-config.yaml stable/chartmuseum
+```
+
+Agora nosso repositório estara funcionando dentro do nosso cluster, agora vamos adicionar nosso repositório na lista do helm pos nos só temos o stable, para fazer isso basta digitar o seguinte comando
+
+```
+  $ helm repo add questcode http://$(kubectl get nodes --namespace devops -o jsonpath="{.items[0].status.addresses[0].address}"):30010
+```
+
+O comando `$(kubectl get nodes --namespace devops -o jsonpath="{.items[0].status.addresses[0].address}")` serve apenas para trazer o ip que o cluster está rodando. Agora iremos instalar um plugin que irá habilitar dar push ao nosso repositório, para instalar esse plugin basta usar o [helm push](https://github.com/chartmuseum/helm-push) para instalar ele apenas executar o seguinte comando
+
+```
+  $ helm plugin install https://github.com/chartmuseum/helm-push
+```
+
+Agora com nosos plugin criado, nossos charts funcionando corretamente, agora vamos popular nosso repositório.
+
+```
+  $ helm lint backend-scm/
+  $ helm push backend-scm/ questcode
+
+  $ helm lint backend-user/
+  $ helm push backend-user/ questcode
+
+  $ helm lint frontend/
+  $ helm push frontend/ questcode
+
+  $ helm repo update
+```
+
 ### Comands Docker
 
 | COMANDOS                                    | DESCRIÇÃO                                                                                                                     |
@@ -702,12 +735,13 @@ Com o todos os charts criados iremos armazenas nossos charts em algum lugar, exi
 
 | COMANDOS                                              | DESCRIÇÃO                                                         |
 | `$ helm repo update`                                  | Baixa os catálogos                                                |
+| `$ helm lint ${CHART}`                                | Verificar se nosso chart tem algum erro                           |
 | `$ helm repo list`                                    | List repositórios                                                 |
 | `$ helm search ${WORDS-SEARCH}`                       | Faz uma pesquisa apartir do texto informado                       |
 | `$ helm search`                                       | List tudo que está no repositórios                                |
 | `$ helm install ${FILE}`                              | Faz uma instalação de algo listado no helm                        |
 | `$ helm install . --name ${NAME} --namespace ${NAMESPACE}` | Cria a partir do diretório atual e define name e qual namespace irá pertencer |
 | `$ helm status ${FILE}`                               | Exibir informações de algo instalado pelo helm                    |
-| `$ helm create ${NAME}`                               | Cria automatátcimanete os arquivos necessários                   |
+| `$ helm create ${NAME}`                               | Cria automatátcimanete os arquivos necessários                    |
 | `$ helm delete ${NAME}`                               | Delete algo instalado pelo instalador do helm                     |
 | `$ helm delete --purge ${NAME}`                       | Delete algo instalado pelo instalador do helm e limpa o histórico |
