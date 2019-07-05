@@ -678,7 +678,6 @@ Feito isso temos todos nossos charts dentro do nosso repositório para ver é ap
   $ helm install questcode/frontend --namespace staging --name staging-frontend
   $ helm install questcode/backend-scm --namespace staging --name staging-backend-scm
   $ helm install questcode/backend-user --namespace staging --name backend-user
-  
 ```
 
 Agora temos todos os nossos charts instalado pelo nossos helm e utilizando o repositório, agora com todo os nossos charts rodando utilizando nosso repositório iremos fazer uma simulação de como seria um update para isso temos que gerar uma nova imagem do docker alterando a tag dele e depois subir para nosso repositório de imagens, feito isso iremos sobrescrever nosso Charts com o seguinte comando
@@ -690,6 +689,43 @@ Agora temos todos os nossos charts instalado pelo nossos helm e utilizando o rep
 # Jenkins
 
 È uma ferramenta criada para fazer integração contínua (CI), iremos fazer a instalação do Jenkins por um arquivo YAML. Antes de tudo vamos criar um volume para nosso Jenkins para poder previnir qualquer crash teremos nossos dados salvos nesse volume.
+
+```
+  $ cd /mnt/
+  $ sudo mkdir data-jenkins
+  $ cd data-jenkins/
+  $ helm install --name jenkins --set persistence.existingClaim=jenkins --set master.serviceType=NodePort --set master.nodePort=30808 --namespace devops stable/jenkins
+```
+
+Agora nosso Jenkins estará sendo executado na porta definada em nosso YAML, para conseguimos pegar a senha do mesmo devemos verifcar o status do helm.
+
+```
+  $ helm status jenkins
+```
+
+Visualizando o nosso status terá uma informação de Notes que estará informando como pegar o password do admin, basta seguir os passos descritos, agora precisamos executar um comando para liberar o permissionamento do jenkins, será o SA já criado.
+
+```
+  kubectl create rolebinding sa-devops-role-clusteradmin --clusterrole=cluster-admin --serviceaccount=devops:default --namespace=devops
+```
+
+Agora iremos criar nossas chaves de SSH para comunicação do Jenkins e do github, para fazer isso precisamos gerar a chaves privadas e públicas na nossa máquina.
+
+```
+  $ ssh-keygen -t rsa -b 4096 -C "jenkins-github"
+```
+
+Com nossa chave basta inserir no [github keyes](https://github.com/settings/keys)
+
+Tudo feito podemos criar nosso primeiro pipeline a criação dos pipe são simples mas deve seguir um estrutura definida pelo jenkins.
+
+## Node
+
+É uma máquina que tem uma parte do jenkins e é capaz de executar nossos pipeline
+
+## Stage
+
+É estágio do processo que está sendo executado
 
 ### Comands Docker
 
@@ -758,6 +794,7 @@ Agora temos todos os nossos charts instalado pelo nossos helm e utilizando o rep
 | `$ helm repo list`                                    | List repositórios                                                 |
 | `$ helm search ${WORDS-SEARCH}`                       | Faz uma pesquisa apartir do texto informado                       |
 | `$ helm search`                                       | List tudo que está no repositórios                                |
+| `$ helm status ${HELM-NAME}`                          | Retorna algumas informações do nosso helm                         |
 | `$ helm install ${FILE}`                              | Faz uma instalação de algo listado no helm                        |
 | `$ helm install . --name ${NAME} --namespace ${NAMESPACE}` | Cria a partir do diretório atual e define name e qual namespace irá pertencer |
 | `$ helm upgrade ${HELM-NAME} ${HELM-REPO} --set image.tag=${TAG-VERSION}` | Faz upgrade de um helm em execução            |
