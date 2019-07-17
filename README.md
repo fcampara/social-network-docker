@@ -789,6 +789,7 @@ Tudo feito podemos criar nosso primeiro pipeline a criação dos pipe são simpl
 ### Comands HELM
 
 | COMANDOS                                              | DESCRIÇÃO                                                        |
+| ----------------------------------------------------- | ---------------------------------------------------------------- |
 | `$ helm repo update`                                  | Baixa os catálogos                                               |
 | `$ helm lint ${CHART}`                                | Verificar se nosso chart tem algum erro                          |
 | `$ helm repo list`                                    | List repositórios                                                |
