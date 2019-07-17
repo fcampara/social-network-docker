@@ -788,19 +788,19 @@ Tudo feito podemos criar nosso primeiro pipeline a criação dos pipe são simpl
 
 ### Comands HELM
 
-| COMANDOS                                              | DESCRIÇÃO                                                         |
-| `$ helm repo update`                                  | Baixa os catálogos                                                |
-| `$ helm lint ${CHART}`                                | Verificar se nosso chart tem algum erro                           |
-| `$ helm repo list`                                    | List repositórios                                                 |
-| `$ helm search ${WORDS-SEARCH}`                       | Faz uma pesquisa apartir do texto informado                       |
-| `$ helm search`                                       | List tudo que está no repositórios                                |
-| `$ helm status ${HELM-NAME}`                          | Retorna algumas informações do nosso helm                         |
-| `$ helm install ${FILE}`                              | Faz uma instalação de algo listado no helm                        |
+| COMANDOS                                              | DESCRIÇÃO                                                        |
+| `$ helm repo update`                                  | Baixa os catálogos                                               |
+| `$ helm lint ${CHART}`                                | Verificar se nosso chart tem algum erro                          |
+| `$ helm repo list`                                    | List repositórios                                                |
+| `$ helm search ${WORDS-SEARCH}`                       | Faz uma pesquisa apartir do texto informado                      |
+| `$ helm search`                                       | List tudo que está no repositórios                               |
+| `$ helm status ${HELM-NAME}`                          | Retorna algumas informações do nosso helm                        |
+| `$ helm install ${FILE}`                              | Faz uma instalação de algo listado no helm                       |
 | `$ helm install . --name ${NAME} --namespace ${NAMESPACE}` | Cria a partir do diretório atual e define name e qual namespace irá pertencer |
-| `$ helm upgrade ${HELM-NAME} ${HELM-REPO} --set image.tag=${TAG-VERSION}` | Faz upgrade de um helm em execução            |
-| `$ helm status ${FILE}`                               | Exibir informações de algo instalado pelo helm                    |
-| `$ helm history ${HELM-NAME}`                         | Exibi o histórico do helm                                         |
-| `$ helm rollback ${HELM-NAME} ${REVISION-NUMBER}`     | Faz rollback para o ultimo deployment do helm                     |
-| `$ helm create ${NAME}`                               | Cria automatátcimanete os arquivos necessários                    |
-| `$ helm delete ${NAME}`                               | Delete algo instalado pelo instalador do helm                     |
-| `$ helm delete --purge ${NAME}`                       | Delete algo instalado pelo instalador do helm e limpa o histórico |
+| `$ helm upgrade ${HELM-NAME} ${HELM-REPO} --set image.tag=${TAG-VERSION}` | Faz upgrade de um helm em execução           |
+| `$ helm status ${FILE}`                               | Exibir informações de algo instalado pelo helm                   |
+| `$ helm history ${HELM-NAME}`                         | Exibi o histórico do helm                                        |
+| `$ helm rollback ${HELM-NAME} ${REVISION-NUMBER}`     | Faz rollback para o ultimo deployment do helm                    |
+| `$ helm create ${NAME}`                               | Cria automatátcimanete os arquivos necessários                   |
+| `$ helm delete ${NAME}`                               | Delete algo instalado pelo instalador do helm                    |
+| `$ helm delete --purge ${NAME}`                       | Delete algo instalado pelo instalador do helm e limpa o histórico|
